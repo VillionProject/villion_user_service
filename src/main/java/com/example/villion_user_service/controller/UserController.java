@@ -5,6 +5,7 @@ import com.example.villion_user_service.domain.request.RequestUser;
 import com.example.villion_user_service.domain.response.ResponseUser;
 import com.example.villion_user_service.service.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,22 +13,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/")
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
 
-    public void setUserService(UserService userService) {
+    @Autowired
+    public UserController(UserService userService) {
         this.userService = userService;
-    }
-
-    @GetMapping("/test")
-    public String welcome() {
-        return "Welcome to the First service";
     }
 
     // 회원가입
     @PostMapping("/users")
     public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser user) {
         ModelMapper mapper = new ModelMapper();
-        UserDto userDto = mapper.map(user, UserDto.class);
+        UserDto userDto = mapper.map(user, UserDto.class); // RequestUser 객체를 UserDto로 전달
 
         ResponseUser responseUser = mapper.map(userDto, ResponseUser.class);
 

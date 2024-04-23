@@ -1,16 +1,19 @@
 package com.example.villion_user_service.domain.request;
 
+import com.example.villion_user_service.domain.eunm.Grade;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class RequestUser {
     // TODO 프론트에서 걸러내게 하기
     @NotBlank(message = "이메일을 입력해주세요.")
-    @Pattern(regexp="^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9" +
-            "a-zA-Z])+[.][a-zA-Z]{2,3}$", message="이메일 주소 양식을 확인해주세요.")
+//    @Pattern(regexp="^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9" +
+//            "a-zA-Z])+[.][a-zA-Z]{2,3}$", message="이메일 주소 양식을 확인해주세요.")
     //    @Email
     private String email;
 
@@ -22,4 +25,11 @@ public class RequestUser {
     @NotBlank(message = "비밀번호를 입력해주세요.")
     @Size(min = 4, max = 12, message = "비밀번호는 4자 이상 12자 이하여야합니다.")
     private String password;
+//
+//    private Long phoneNumber;
+//    private LocalDate createdAt;
+//    private String profileImage;
+//    private int yearlyReadingTarget;
+//    private String familyAccount;
+
 }

@@ -22,13 +22,16 @@ public class UserEntity {
     @Column(nullable = false, length = 10)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
+    private String encryptedPwd;
+
+//    @Column(nullable = false)
     private Long phoneNumber;
 
-    @Column(nullable = false, length = 10)
+//    @Column(nullable = false, length = 10)
     private String libraryName;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private LibraryStatus libraryStatus; // enum
 
     private LocalDate createdAt;
@@ -41,7 +44,7 @@ public class UserEntity {
 
     private String familyAccount; // TODO 고민 필요.. 친구맺기 개념
 
-    private List<ProductEntity> registeredProducts; // 등록한 상품
-    private List<ProductEntity> purchasedProducts; // 구매한 상품
-    private List<ProductEntity> recentlyViewedProducts; // 최근에 본 상품
+//    private List<ProductEntity> registeredProducts; // 등록한 상품
+//    private List<ProductEntity> purchasedProducts; // 구매한 상품
+//    private List<ProductEntity> recentlyViewedProducts; // 최근에 본 상품
 }
