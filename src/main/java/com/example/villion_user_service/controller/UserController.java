@@ -36,11 +36,11 @@ public class UserController {
 
 
     // 로그인
-//    @PostMapping("/login")
-//    public void login (RequestLogin requestLogin) {
-//
-//
-//    }
+    @PostMapping("/login")
+    public void login (RequestLogin requestLogin) {
+
+
+    }
 
 
 

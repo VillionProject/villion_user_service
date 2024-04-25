@@ -4,6 +4,8 @@ import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.request.RequestLogin;
 import com.example.villion_user_service.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.crypto.SecretKey;
@@ -22,6 +25,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 
 @Slf4j
 @AllArgsConstructor
@@ -57,36 +61,27 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 //     # 로그인 성공했을 때 (ex.값반환, 토큰만료시간 등등)
 //    @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        super.successfulAuthentication(request, response, chain, authResult);
+
+        String userName = ((User) authResult.getPrincipal()).getUsername();
+        UserDto userDto = userService.getUserDetailsByEmail(userName);
+
+        byte[] secretKeyBytes = Base64.getEncoder().encode(environment.getProperty("token.secret").getBytes());
+
+        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
+
+        Instant now = Instant.now();
+
+        String token = Jwts.builder()
+                .subject(userDto.getEmail())
+                .expiration(Date.from(now.plusMillis(Long.parseLong(environment.getProperty("token.expiration_time")))))
+                .issuedAt(Date.from(now))
+                .signWith(secretKey)
+                .compact();
+
+        response.addHeader("token", token);
+        response.addHeader("userId", userDto.getEmail());
+
         System.out.println("로그인 성공");
 
-        response.addHeader("ytyt", "yuyu");
     }
-
-//     # 로그인 성공했을 때 (ex.값반환, 토큰만료시간 등등)
-//    @Override
-//    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
-//                                            Authentication auth) throws IOException, ServletException {
-//
-//        String userName = ((User) auth.getPrincipal()).getUsername();
-//        UserDto userDetails = userService.getUserDetailsByEmail(userName);
-//
-//        byte[] secretKeyBytes = Base64.getEncoder().encode(environment.getProperty("token.secret").getBytes());
-//
-//        SecretKey secretKey = Keys.hmacShaKeyFor(secretKeyBytes);
-//
-//        Instant now = Instant.now();
-//
-//        String token = Jwts.builder()
-//                .subject(userDetails.getUserId())
-//                .expiration(Date.from(now.plusMillis(Long.parseLong(environment.getProperty("token.expiration_time")))))
-//                .issuedAt(Date.from(now))
-//                .signWith(secretKey)
-//                .compact();
-//
-//        res.addHeader("token", token);
-//        res.addHeader("userId", userDetails.getUserId());
-//    }
-
-
 }
