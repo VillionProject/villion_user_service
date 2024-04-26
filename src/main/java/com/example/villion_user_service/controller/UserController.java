@@ -1,6 +1,7 @@
 package com.example.villion_user_service.controller;
 
 import com.example.villion_user_service.domain.dto.UserDto;
+import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.request.RequestLogin;
 import com.example.villion_user_service.domain.request.RequestUser;
 import com.example.villion_user_service.domain.response.ResponseUser;
@@ -36,16 +37,18 @@ public class UserController {
 
 
     // 로그인
-    @PostMapping("/login")
-    public void login (RequestLogin requestLogin) {
-
-
-    }
+//    @PostMapping("/login")
+//    public void login (RequestLogin requestLogin) {
+//
+//
+//    }
 
 
 
     // 내정보 조회
-
-
+    @GetMapping("/test")
+    public void test() {
+        System.out.println("asdasdasdasdasd");
+    }
 
 }
