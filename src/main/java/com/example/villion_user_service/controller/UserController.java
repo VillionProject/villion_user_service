@@ -4,6 +4,7 @@ import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.request.RequestLogin;
 import com.example.villion_user_service.domain.request.RequestUser;
+import com.example.villion_user_service.domain.response.ResponseLogin;
 import com.example.villion_user_service.domain.response.ResponseUser;
 import com.example.villion_user_service.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -23,15 +24,15 @@ public class UserController {
     }
 
     // 회원가입
-    @PostMapping("signup")
-    public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser user) {
+    @PostMapping("/signup")
+    public ResponseEntity<ResponseLogin> createUser(@RequestBody RequestUser user) {
         ModelMapper mapper = new ModelMapper();
         UserDto userDto = mapper.map(user, UserDto.class); // RequestUser 객체를 UserDto로 전달
 
-        ResponseUser responseUser = mapper.map(userDto, ResponseUser.class);
+        ResponseLogin responseLogin = mapper.map(userDto, ResponseLogin.class);
 
         userService.createUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseLogin);
     }
 
 
@@ -46,9 +47,9 @@ public class UserController {
 
 
     // 내정보 조회
-    @GetMapping("/test")
-    public void test() {
-        System.out.println("asdasdasdasdasd");
+    @GetMapping("/findByID/{userId}")
+    public void findByID(@PathVariable("userId") String id) {
+        User
     }
 
 }
