@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/")
 public class UserController {
@@ -46,10 +48,15 @@ public class UserController {
 
 
 
-    // 내정보 조회
+    // 사용자 ID로 조회
     @GetMapping("/findByID/{userId}")
-    public void findByID(@PathVariable("userId") String id) {
-        User
+    public ResponseEntity<ResponseUser> findByID(@PathVariable("userId") Long id) {
+        Optional<UserEntity> userEntity = userService.findByUserId(id);
+
+//        TODO ResponseUser로 형변환이 안되고 있음
+        ResponseUser returnValue = new ModelMapper().map(userEntity, ResponseUser.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(returnValue);
     }
 
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -79,5 +80,13 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public Optional<UserEntity> findByUserId(Long id) {
+        Optional<UserEntity> userEntity = userRepository.findById(id);
 
+        if (userEntity.isEmpty()) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return userEntity;
+    }
 }
