@@ -1,6 +1,7 @@
 package com.example.villion_user_service.domain.eunm;
 
 public enum Category {
+    NOT_SPECIFIED, //지정안함
     FICTION,
     NON_FICTION,
     SCIENCE_FICTION,

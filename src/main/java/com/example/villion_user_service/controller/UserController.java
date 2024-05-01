@@ -3,6 +3,7 @@ package com.example.villion_user_service.controller;
 import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.request.RequestLogin;
+import com.example.villion_user_service.domain.request.RequestSignup;
 import com.example.villion_user_service.domain.request.RequestUser;
 import com.example.villion_user_service.domain.response.ResponseLogin;
 import com.example.villion_user_service.domain.response.ResponseUser;
@@ -27,9 +28,9 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<ResponseLogin> createUser(@RequestBody RequestUser user) {
+    public ResponseEntity<ResponseLogin> createUser(@RequestBody RequestSignup requestSignup) {
         ModelMapper mapper = new ModelMapper();
-        UserDto userDto = mapper.map(user, UserDto.class); // RequestUser 객체를 UserDto로 전달
+        UserDto userDto = mapper.map(requestSignup, UserDto.class); // RequestLogin 객체를 UserDto로 전달
 
         ResponseLogin responseLogin = mapper.map(userDto, ResponseLogin.class);
 
@@ -60,10 +61,27 @@ public class UserController {
 
         UserEntity userEntity = userEntityOptional.get();
 
-//        TODO ResponseUser로 형변환이 안되고 있음
         ResponseUser returnValue = new ModelMapper().map(userEntity, ResponseUser.class);
 
         return ResponseEntity.status(HttpStatus.OK).body(returnValue);
     }
+
+    // 도서관 정보 수정
+    @PutMapping("/updateLibrary/{userId}")
+    public ResponseEntity<ResponseUser> updateLirary(@PathVariable("userId") Long userId, @RequestBody RequestUser requestUser) {
+        UserEntity userEntity = userService.updateLibrary(userId, requestUser);
+
+        // TODO 이거 넣어야 하나?
+        if (userEntity != null) { // Optional 내부에 실제 객체가 있는지 확인
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        ResponseUser returnValue = new ModelMapper().map(userEntity, ResponseUser.class);
+
+        return ResponseEntity.status(HttpStatus.OK).body(returnValue);
+    }
+
+
+
 
 }

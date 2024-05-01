@@ -20,4 +20,5 @@ public class ResponseUser {
     private String profileImage;
     private int yearlyReadingTarget;
     private String familyAccount;
+
 }

@@ -2,8 +2,10 @@ package com.example.villion_user_service.service;
 
 import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.UserEntity;
+import com.example.villion_user_service.domain.eunm.Category;
 import com.example.villion_user_service.domain.eunm.Grade;
 import com.example.villion_user_service.domain.eunm.LibraryStatus;
+import com.example.villion_user_service.domain.request.RequestUser;
 import com.example.villion_user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -15,8 +17,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,6 +48,8 @@ public class UserService implements UserDetailsService {
                 .phoneNumber(Long.valueOf("1234"))
                 .familyAccount("test")
                 .yearlyReadingTarget(0)
+                .base_location_id("지역 미지정")
+                .interstCategory(List.of(Category.NOT_SPECIFIED))
                 .build();
 
         userRepository.save(userEntity);
@@ -89,4 +96,55 @@ public class UserService implements UserDetailsService {
 
         return userEntity;
     }
+
+    public UserEntity updateLibrary (Long id, RequestUser requestUser) {
+        Optional<UserEntity> userEntityOptional = userRepository.findById(id);
+
+        if (userEntityOptional.isEmpty()) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        UserEntity userEntity = userEntityOptional.get();
+
+//        방법 1 : 이게 더 직관적
+        if (requestUser.getLibraryName() != null) {
+            userEntity.setLibraryName(requestUser.getLibraryName());
+        }
+        if (requestUser.getLibraryStatus() != null) {
+            userEntity.setLibraryStatus(requestUser.getLibraryStatus());
+        }
+        if (requestUser.getInterstCategory() != null) {
+            userEntity.setInterstCategory(requestUser.getInterstCategory());
+        }
+        if (requestUser.getYearlyReadingTarget() != 0) {
+            userEntity.setYearlyReadingTarget(requestUser.getYearlyReadingTarget());
+        }
+        if (requestUser.getBase_location_id() != null) {
+            userEntity.setBase_location_id(requestUser.getBase_location_id());
+        }
+
+
+        //        방법 2 - for문 사용
+//         방법 2 : 반복을 없앨 수 있어서 좋다..
+//        Field 클래스는 리플렉션을 통해 클래스의 필드에 동적으로 접근하고 조작할 수 있도록 해주는 중요한 역할
+//        for (Field field : RequestUser.class.getDeclaredFields()) {
+//            try {
+//                Object value = field.get(requestUser);
+//
+//                // 필드 값이 null이 아니거나 0이 아닌 경우에만 업데이트합니다.
+//                if (value != null && !(value instanceof Integer && (Integer)value == 0)) {
+//                    Field userField = UserEntity.class.getDeclaredField(field.getName()); // 모든 필드를 가져온다
+//                    userField.set(userEntity, value); // 리플렉션을 사용하여 UserEntity 객체의 특정 필드에 value 변수에 저장된 값을 설정
+//                }
+//            } catch (IllegalAccessException | NoSuchFieldException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+        userRepository.save(userEntity);
+
+        return userEntity;
+    }
+
+
 }
