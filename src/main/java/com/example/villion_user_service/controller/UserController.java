@@ -50,8 +50,15 @@ public class UserController {
 
     // 사용자 ID로 조회
     @GetMapping("/findByID/{userId}")
-    public ResponseEntity<ResponseUser> findByID(@PathVariable("userId") Long id) {
-        Optional<UserEntity> userEntity = userService.findByUserId(id);
+    public ResponseEntity<ResponseUser> findByID(@PathVariable("userId") Long userId) {
+        Optional<UserEntity> userEntityOptional = userService.findByUserId(userId);
+
+        // TODO 이거 넣어야 하나?
+        if (userEntityOptional.isEmpty()) { // Optional 내부에 실제 객체가 있는지 확인
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        UserEntity userEntity = userEntityOptional.get();
 
 //        TODO ResponseUser로 형변환이 안되고 있음
         ResponseUser returnValue = new ModelMapper().map(userEntity, ResponseUser.class);
