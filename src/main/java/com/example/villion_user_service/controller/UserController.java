@@ -1,8 +1,8 @@
 package com.example.villion_user_service.controller;
 
 import com.example.villion_user_service.domain.dto.UserDto;
+import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
-import com.example.villion_user_service.domain.request.RequestLogin;
 import com.example.villion_user_service.domain.request.RequestSignup;
 import com.example.villion_user_service.domain.request.RequestUser;
 import com.example.villion_user_service.domain.response.ResponseLogin;
@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -68,7 +70,7 @@ public class UserController {
 
     // 도서관 정보 수정
     @PutMapping("/updateLibrary/{userId}")
-    public ResponseEntity<ResponseUser> updateLirary(@PathVariable("userId") Long userId, @RequestBody RequestUser requestUser) {
+    public ResponseEntity<ResponseUser> updateLibrary(@PathVariable("userId") Long userId, @RequestBody RequestUser requestUser) {
         UserEntity userEntity = userService.updateLibrary(userId, requestUser);
 
         // TODO 이거 넣어야 하나?
@@ -82,6 +84,31 @@ public class UserController {
     }
 
 
+    // 찜 도서관
 
 
+
+
+    // 찜 도서
+
+
+
+
+    // 장바구니 담기
+    @PostMapping("/addCart/{productId}")
+    public void addCart(@PathVariable List<Long> productId) {
+        List<Long> productList = new ArrayList<>();
+        for(Long id : productId) {
+            productList.add(id);
+        }
+
+
+//        productId.forEach(v -> productList.add(ProductEntity));
+    }
+
+    // 장바구니 비우기
+    @PostMapping("/removeCart/{productId}")
+    public void removeCart(@PathVariable List<Long> productId) {
+
+    }
 }
