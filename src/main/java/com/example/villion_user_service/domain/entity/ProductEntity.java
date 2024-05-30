@@ -16,6 +16,7 @@ public class ProductEntity {
     private Long productId;
 
     private Category category; // enum
+    private Long quantity;
     private LocalDate rentalPeriod;
     private Long rentalPrice;
     private RentalMethod rentalMethod; // enum

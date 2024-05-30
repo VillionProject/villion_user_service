@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Entity
@@ -49,8 +50,9 @@ public class UserEntity {
     private int yearlyReadingTarget;
 
     private String familyAccount; // TODO 고민 필요.. 친구맺기 개념
-    private List<Category> interstCategory;
+    private Category interestCategory;
     private String base_location_id;
+    private Map<Long, ProductEntity> productList;
 
 
 //    private List<ProductEntity> registeredProducts; // 등록한 상품

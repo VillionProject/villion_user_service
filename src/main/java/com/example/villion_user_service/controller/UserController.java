@@ -14,14 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/")
 public class UserController {
     private final UserService userService;
+
 
     @Autowired
     public UserController(UserService userService) {
@@ -96,15 +95,18 @@ public class UserController {
 
     // 장바구니 담기
     @PostMapping("/addCart/{productId}")
-    public void addCart(@PathVariable List<Long> productId) {
-        List<Long> productList = new ArrayList<>();
-        for(Long id : productId) {
-            productList.add(id);
-        }
-
-
-//        productId.forEach(v -> productList.add(ProductEntity));
+    public void addCart(@PathVariable List<Long> productIds) {
+        HashMap<Long, ProductEntity> productList = new HashMap<>();
+            for(Long productId : productIds) {
+                ProductEntity productEntity = productList.get(productId);
+                if(productList.containsKey(productId)) {
+                    productEntity.setQuantity(productEntity.getQuantity()+1);
+                } else {
+                    productEntity.setQuantity(1L);
+                }
+            }
     }
+
 
     // 장바구니 비우기
     @PostMapping("/removeCart/{productId}")
