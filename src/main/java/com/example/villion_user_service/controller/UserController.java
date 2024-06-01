@@ -104,8 +104,8 @@ public class UserController {
 
     // 장바구니 보여주기
     @GetMapping("/addCart/{userId}")
-    public List<CartEntity> getCart(@PathVariable("userId") Long userId) {
-        List<CartEntity> cart = cartService.getCart(userId);
+    public Map<Long, CartEntity> getCart(@PathVariable("userId") Long userId) {
+        Map<Long, CartEntity> cart = cartService.getCart(userId);
         return cart;
     }
 

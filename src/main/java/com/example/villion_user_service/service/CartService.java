@@ -11,7 +11,9 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -27,12 +29,16 @@ public class CartService {
         cartRepository.save(cartEntity);
     }
 
-    //TODO CartEntity 받는걸 Map으로 바꿀지?
-    public List<CartEntity> getCart(Long userId) {
+    //TODO CartEntity 받는걸 Map으로 바꿀지?(key값이 productId)
+    public Map<Long, CartEntity> getCart(Long userId) {
 
         List<CartEntity> allByUserId = cartRepository.findAllByUserId(userId);
+        Map<Long, CartEntity> cartMap = new HashMap<>();
 
+        for (CartEntity cartEntity : allByUserId) {
+            cartMap.put(cartEntity.getProductId(), cartEntity);
+        }
 
-        return allByUserId;
+        return cartMap;
     }
 }
