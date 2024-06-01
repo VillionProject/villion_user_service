@@ -1,13 +1,18 @@
 package com.example.villion_user_service.controller;
 
 import com.example.villion_user_service.domain.dto.UserDto;
+import com.example.villion_user_service.domain.entity.CartEntity;
 import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
+import com.example.villion_user_service.domain.request.RequestCart;
 import com.example.villion_user_service.domain.request.RequestSignup;
 import com.example.villion_user_service.domain.request.RequestUser;
 import com.example.villion_user_service.domain.response.ResponseLogin;
 import com.example.villion_user_service.domain.response.ResponseUser;
+import com.example.villion_user_service.repository.CartRepository;
+import com.example.villion_user_service.service.CartService;
 import com.example.villion_user_service.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,14 +23,11 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final CartService cartService;
 
-
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     // 회원가입
     @PostMapping("/signup")
@@ -94,19 +96,18 @@ public class UserController {
 
 
     // 장바구니 담기
-    @PostMapping("/addCart/{productId}")
-    public void addCart(@PathVariable List<Long> productIds) {
-        HashMap<Long, ProductEntity> productList = new HashMap<>();
-            for(Long productId : productIds) {
-                ProductEntity productEntity = productList.get(productId);
-                if(productList.containsKey(productId)) {
-                    productEntity.setQuantity(productEntity.getQuantity()+1);
-                } else {
-                    productEntity.setQuantity(1L);
-                }
-            }
+    @PostMapping("/addCart")
+    public void addCart(@RequestBody RequestCart requestCart) {
+        cartService.addCart(requestCart);
+
     }
 
+    // 장바구니 보여주기
+    @GetMapping("/addCart/{userId}")
+    public List<CartEntity> getCart(@PathVariable("userId") Long userId) {
+        List<CartEntity> cart = cartService.getCart(userId);
+        return cart;
+    }
 
     // 장바구니 비우기
     @PostMapping("/removeCart/{productId}")

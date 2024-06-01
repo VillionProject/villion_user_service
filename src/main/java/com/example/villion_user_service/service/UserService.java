@@ -1,5 +1,6 @@
 package com.example.villion_user_service.service;
 
+import com.example.villion_user_service.client.BooksServiceClient;
 import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.eunm.Category;
@@ -30,6 +31,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
+
     public UserDto createUser(UserDto userDto) {
 // ✔ UserDto -> UserEntity 변환 작업(ModelMapper 사용)
         ModelMapper mapper = new ModelMapper();
@@ -49,7 +51,7 @@ public class UserService implements UserDetailsService {
                 .familyAccount("test")
                 .yearlyReadingTarget(0)
                 .base_location_id("지역 미지정")
-                .interstCategory(List.of(Category.NOT_SPECIFIED))
+//                .interstCategory(List.of(Category.NOT_SPECIFIED))
                 .build();
 
         userRepository.save(userEntity);
@@ -114,7 +116,7 @@ public class UserService implements UserDetailsService {
             userEntity.setLibraryStatus(requestUser.getLibraryStatus());
         }
         if (requestUser.getInterstCategory() != null) {
-            userEntity.setInterstCategory(requestUser.getInterstCategory());
+//            userEntity.setInterstCategory(requestUser.getInterstCategory());
         }
         if (requestUser.getYearlyReadingTarget() != 0) {
             userEntity.setYearlyReadingTarget(requestUser.getYearlyReadingTarget());

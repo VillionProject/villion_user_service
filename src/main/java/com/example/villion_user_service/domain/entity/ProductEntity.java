@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @Entity
@@ -15,13 +17,13 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
 
-    private Category category; // enum
-    private Long quantity;
-    private LocalDate rentalPeriod;
-    private Long rentalPrice;
-    private RentalMethod rentalMethod; // enum
-    private boolean popularity;
-    private String rentalLocation;
-    private String description;
 
+//    private Category category; // enum
+//    private Long quantity;
+//    private LocalDate rentalPeriod;
+//    private Long rentalPrice;
+//    private RentalMethod rentalMethod; // enum
+//    private boolean popularity;
+//    private String rentalLocation;
+//    private String description;
 }

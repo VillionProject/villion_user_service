@@ -52,7 +52,9 @@ public class UserEntity {
     private String familyAccount; // TODO 고민 필요.. 친구맺기 개념
     private Category interestCategory;
     private String base_location_id;
-    private Map<Long, ProductEntity> productList;
+
+    @OneToMany // 객체안에 리스트
+    private List<ProductEntity> productList;
 
 
 //    private List<ProductEntity> registeredProducts; // 등록한 상품

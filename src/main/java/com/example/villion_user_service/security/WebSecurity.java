@@ -53,7 +53,7 @@ public class WebSecurity{
 
         // 인가(접근권한) 설정
         http.authorizeHttpRequests((authz) -> authz
-//                                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll() // 모든 요청에 대해
+                                .requestMatchers(new AntPathRequestMatcher("/**")).permitAll() // 모든 요청에 대해
                                 .requestMatchers(new AntPathRequestMatcher("/signup", "POST")).permitAll() // 회원가입 전체 허용
 //                                .requestMatchers(new AntPathRequestMatcher("/test", "GET")).permitAll() // 내정보 조회
                                 .requestMatchers("/**").access(
