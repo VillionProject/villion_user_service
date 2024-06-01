@@ -110,12 +110,8 @@ public class UserController {
     }
 
     // 장바구니 비우기
-    @PostMapping("/removeCart/{productId}")
-    public void removeCart(@PathVariable List<Long> productId) {
-        List<Long> productList = new ArrayList<>();
-        for(Long id : productId) {
-            productList.remove(id);
-        }
-
+    @PostMapping("/deleteCart/{userId}/{productId}")
+    public void deleteCart(@PathVariable("userId") Long userId, @PathVariable("productId") Long productId) {
+        cartService.deleteCart(userId, productId);
     }
 }

@@ -5,6 +5,7 @@ import com.example.villion_user_service.domain.entity.CartEntity;
 import com.example.villion_user_service.domain.request.RequestCart;
 import com.example.villion_user_service.domain.response.ResponseBooks;
 import com.example.villion_user_service.repository.CartRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -29,16 +30,29 @@ public class CartService {
         cartRepository.save(cartEntity);
     }
 
-    //TODO CartEntity 받는걸 Map으로 바꿀지?(key값이 productId)
     public Map<Long, CartEntity> getCart(Long userId) {
-
         List<CartEntity> allByUserId = cartRepository.findAllByUserId(userId);
+
+
         Map<Long, CartEntity> cartMap = new HashMap<>();
 
         for (CartEntity cartEntity : allByUserId) {
             cartMap.put(cartEntity.getProductId(), cartEntity);
         }
-
         return cartMap;
+    }
+
+//    장바구니 선택 삭제
+    @Transactional
+    public void deleteCart(Long userId, Long productId) {
+        cartRepository.deleteByUserIdAndProductId(userId, productId);
+//        List<CartEntity> allByUserId = cartRepository.findAllByUserId(userId);
+
+//        Map<Long, CartEntity> cartMap = new HashMap<>();
+//        for (CartEntity cartEntity : allByUserId) {
+//            cartMap.put(cartEntity.getProductId(), cartEntity);
+//        }
+//        cartMap.remove(productId);
+
     }
 }

@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface CartRepository extends CrudRepository<CartEntity, Long> {
     List<CartEntity> findAllByUserId(Long userId);
+
+    void deleteByUserIdAndProductId(Long userId, Long productId);
 }
