@@ -46,13 +46,12 @@ public class CartService {
     @Transactional
     public void deleteCart(Long userId, Long productId) {
         cartRepository.deleteByUserIdAndProductId(userId, productId);
-//        List<CartEntity> allByUserId = cartRepository.findAllByUserId(userId);
-
-//        Map<Long, CartEntity> cartMap = new HashMap<>();
-//        for (CartEntity cartEntity : allByUserId) {
-//            cartMap.put(cartEntity.getProductId(), cartEntity);
-//        }
-//        cartMap.remove(productId);
-
     }
+
+//    장바구니 전체 삭제
+    @Transactional
+    public void deleteAllCart(Long userId) {
+        cartRepository.deleteAllByUserId(userId);
+    }
+
 }

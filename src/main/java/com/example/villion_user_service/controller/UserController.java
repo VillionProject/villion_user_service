@@ -109,9 +109,15 @@ public class UserController {
         return cart;
     }
 
-    // 장바구니 비우기
+    // 장바구니 선택 비우기
     @PostMapping("/deleteCart/{userId}/{productId}")
     public void deleteCart(@PathVariable("userId") Long userId, @PathVariable("productId") Long productId) {
         cartService.deleteCart(userId, productId);
+    }
+
+    // 장바구니 전체 비우기
+    @PostMapping("/deleteAllCart/{userId}")
+    public void deleteAllCart(@PathVariable("userId") Long userId) {
+        cartService.deleteAllCart(userId);
     }
 }
