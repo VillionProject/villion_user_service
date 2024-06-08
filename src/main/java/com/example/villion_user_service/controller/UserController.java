@@ -4,6 +4,7 @@ import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.CartEntity;
 import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
+import com.example.villion_user_service.domain.request.RequestAddProduct;
 import com.example.villion_user_service.domain.request.RequestCart;
 import com.example.villion_user_service.domain.request.RequestSignup;
 import com.example.villion_user_service.domain.request.RequestUser;
@@ -11,6 +12,7 @@ import com.example.villion_user_service.domain.response.ResponseLogin;
 import com.example.villion_user_service.domain.response.ResponseUser;
 import com.example.villion_user_service.repository.CartRepository;
 import com.example.villion_user_service.service.CartService;
+import com.example.villion_user_service.service.ProductService;
 import com.example.villion_user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -27,6 +29,7 @@ import java.util.*;
 public class UserController {
     private final UserService userService;
     private final CartService cartService;
+    private final ProductService productService;
 
 
     // 회원가입
@@ -120,4 +123,12 @@ public class UserController {
     public void deleteAllCart(@PathVariable("userId") Long userId) {
         cartService.deleteAllCart(userId);
     }
+
+    // 제품 등록
+    @PostMapping("/addProduct/{userId}")
+    public void addProduct(@PathVariable Long userId, @RequestBody RequestAddProduct requestAddProduct) {
+        productService.addProduct(userId, requestAddProduct);
+    }
+
+
 }

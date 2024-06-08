@@ -1,6 +1,6 @@
 # ?? ????? ?? ?? ??
 server:
-  port: 0
+  port: 1234
 
 # ?? ????? ?? ??
 spring:
@@ -18,6 +18,17 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+      group-id: Terrain
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 # ?? ????? eureka ??
 eureka:
   instance:
@@ -31,3 +42,4 @@ eureka:
 #token:
 #  expiration_time: 86400000 # 하루 60초*(60분*24시간)*1000
 #  secret: user_token # 어떤 키를 가지고 생성할 것인지(임의값 넣기)
+
