@@ -31,4 +31,6 @@ public class CartEntity {
     private Long rentalQuantity;
     private LocalDate rentalPeriod; // 대여 가능 기간
     private Long rentalPrice;
+    private Boolean rentable;
+    private Boolean purchasable;
 }

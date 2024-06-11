@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/")
@@ -106,10 +107,31 @@ public class UserController {
     }
 
     // 장바구니 보여주기
-    @GetMapping("/addCart/{userId}")
+    @GetMapping("/getCart/{userId}")
     public Map<Long, CartEntity> getCart(@PathVariable("userId") Long userId) {
         Map<Long, CartEntity> cart = cartService.getCart(userId);
-        return cart;
+        // rentable이 true인 항목만 필터링하여 새로운 맵에 수집
+        Map<Long, CartEntity> filteredCart = cart.entrySet().stream()
+                .filter(entry -> entry.getValue().getPurchasable())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return filteredCart;
+    }
+
+    // (장바구니에서) 직거래 보기 - 대여/구매로 나눠서 보여주기
+
+
+//     (장바구니에서) 직배송(빌런배송) 보기 - 대여/구매로 나눠서 보여주기  // TODO 이거 하는중...
+    @GetMapping("/getDirectCart/{userId}")
+    public Map<Long, CartEntity> getDirectCart(@PathVariable("userId") Long userId) {
+        Map<Long, CartEntity> cart = cartService.getCart(userId);
+
+        // rentable이 true인 항목만 필터링하여 새로운 맵에 수집
+        Map<Long, CartEntity> filteredCart = cart.entrySet().stream()
+                .filter(entry -> entry.getValue().getRentable())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return filteredCart;
     }
 
     // 장바구니 선택 비우기
@@ -124,11 +146,17 @@ public class UserController {
         cartService.deleteAllCart(userId);
     }
 
+
+
     // 제품 등록
     @PostMapping("/addProduct/{userId}")
     public void addProduct(@PathVariable Long userId, @RequestBody RequestAddProduct requestAddProduct) {
         productService.addProduct(userId, requestAddProduct);
     }
+
+    // 직거래 신청(1:1 채팅으로 넘어가기)
+
+    // 직배송 신청(일반적인 구매로직)
 
 
 }
