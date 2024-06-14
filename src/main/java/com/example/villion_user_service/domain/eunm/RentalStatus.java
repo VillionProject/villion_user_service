@@ -1,6 +1,9 @@
 package com.example.villion_user_service.domain.eunm;
 
 public enum RentalStatus {
+    UNAVAILABLE,
     AVAILABLE,
-    RENTED
+    CHATTING,
+    RENTED,
+    PURCHASED
 }

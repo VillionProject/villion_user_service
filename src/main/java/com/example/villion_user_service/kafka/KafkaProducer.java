@@ -29,8 +29,6 @@ public void send(String topic, ProductDto productDto) {
 
         kafkaTemplate.send(topic, productDto);
         log.info("kafka Producer sent data from the Product microservice:" + productDto);
-
-
     }
 
 }

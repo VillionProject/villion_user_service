@@ -1,7 +1,9 @@
 package com.example.villion_user_service.domain.entity;
 
 import com.example.villion_user_service.domain.eunm.Category;
+import com.example.villion_user_service.domain.eunm.ProductStatus;
 import com.example.villion_user_service.domain.eunm.RentalMethod;
+import com.example.villion_user_service.domain.eunm.RentalStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,15 +17,18 @@ import java.util.Map;
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
+
     private Long productId;
 
-
+    private String bookName;
 //    private Category category; // enum
-//    private Long quantity;
+    private Long quantity;
 //    private LocalDate rentalPeriod;
-//    private Long rentalPrice;
+    private Long price;
 //    private RentalMethod rentalMethod; // enum
 //    private boolean popularity;
 //    private String rentalLocation;
 //    private String description;
+
 }

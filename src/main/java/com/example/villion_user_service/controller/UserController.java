@@ -4,10 +4,8 @@ import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.CartEntity;
 import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
-import com.example.villion_user_service.domain.request.RequestAddProduct;
-import com.example.villion_user_service.domain.request.RequestCart;
-import com.example.villion_user_service.domain.request.RequestSignup;
-import com.example.villion_user_service.domain.request.RequestUser;
+import com.example.villion_user_service.domain.eunm.RentalMethod;
+import com.example.villion_user_service.domain.request.*;
 import com.example.villion_user_service.domain.response.ResponseLogin;
 import com.example.villion_user_service.domain.response.ResponseUser;
 import com.example.villion_user_service.repository.CartRepository;
@@ -107,28 +105,66 @@ public class UserController {
     }
 
     // 장바구니 보여주기
-    @GetMapping("/getCart/{userId}")
-    public Map<Long, CartEntity> getCart(@PathVariable("userId") Long userId) {
+//    @GetMapping("/getCart/{userId}")
+//    public Map<Long, CartEntity> getCart(@PathVariable("userId") Long userId) {
+//        Map<Long, CartEntity> cart = cartService.getCart(userId);
+//        return cart;
+//    }
+
+    // (장바구니에서) 직거래 보기 - "대여" 보여주기
+    @GetMapping("/getFaceRentalCart/{userId}")
+    public Map<Long, CartEntity> getFaceRentalCart(@PathVariable("userId") Long userId) {
         Map<Long, CartEntity> cart = cartService.getCart(userId);
+
         // rentable이 true인 항목만 필터링하여 새로운 맵에 수집
         Map<Long, CartEntity> filteredCart = cart.entrySet().stream()
-                .filter(entry -> entry.getValue().getPurchasable())
+                .filter(entry -> entry.getValue().getRentalMethod().equals(RentalMethod.FACE_TO_FACE)) // 직거래
+                .filter(entry -> entry.getValue().getRentable()) // 대여가능
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         return filteredCart;
     }
 
-    // (장바구니에서) 직거래 보기 - 대여/구매로 나눠서 보여주기
-
-
-//     (장바구니에서) 직배송(빌런배송) 보기 - 대여/구매로 나눠서 보여주기  // TODO 이거 하는중...
-    @GetMapping("/getDirectCart/{userId}")
-    public Map<Long, CartEntity> getDirectCart(@PathVariable("userId") Long userId) {
+    // (장바구니에서) 직거래 보기 - "구매" 보여주기
+    @GetMapping("/getFacePurchaseCart/{userId}")
+    public Map<Long, CartEntity> getFacePurchaseCart(@PathVariable("userId") Long userId) {
         Map<Long, CartEntity> cart = cartService.getCart(userId);
 
         // rentable이 true인 항목만 필터링하여 새로운 맵에 수집
         Map<Long, CartEntity> filteredCart = cart.entrySet().stream()
-                .filter(entry -> entry.getValue().getRentable())
+                .filter(entry -> entry.getValue().getRentalMethod().equals(RentalMethod.FACE_TO_FACE)) // 직거래
+                .filter(entry -> entry.getValue().getPurchasable()) // 구매가능
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return filteredCart;
+    }
+
+
+
+
+//     (장바구니에서) 직배송(빌런배송) 보기 - "대여" 보여주기
+    @GetMapping("/getDeliveryRentalCart/{userId}")
+    public Map<Long, CartEntity> getDeliveryRentalCart(@PathVariable("userId") Long userId) {
+        Map<Long, CartEntity> cart = cartService.getCart(userId);
+
+        // rentable이 true인 항목만 필터링하여 새로운 맵에 수집
+        Map<Long, CartEntity> filteredCart = cart.entrySet().stream()
+                .filter(entry -> entry.getValue().getRentalMethod().equals(RentalMethod.DELIVERY)) // 직배송
+                .filter(entry -> entry.getValue().getRentable()) // 대여가능
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return filteredCart;
+    }
+
+    //     (장바구니에서) 직배송(빌런배송) 보기 - "구매" 보여주기
+    @GetMapping("/getDeliveryPurchaseCart/{userId}")
+    public Map<Long, CartEntity> getDeliveryPurchaseCart(@PathVariable("userId") Long userId) {
+        Map<Long, CartEntity> cart = cartService.getCart(userId);
+
+        // rentable이 true인 항목만 필터링하여 새로운 맵에 수집
+        Map<Long, CartEntity> filteredCart = cart.entrySet().stream()
+                .filter(entry -> entry.getValue().getRentalMethod().equals(RentalMethod.DELIVERY)) // 직배송
+                .filter(entry -> entry.getValue().getPurchasable()) // 구매가능
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         return filteredCart;
@@ -156,7 +192,15 @@ public class UserController {
 
     // 직거래 신청(1:1 채팅으로 넘어가기)
 
+
+
+
     // 직배송 신청(일반적인 구매로직)
+    @PostMapping("/addDeliveryOrder/{userId}")
+    public void addDeliveryOrder(@PathVariable Long userId, @RequestBody RequestAddDeliveryOrder requestAddDeliveryOrder) {
+        productService.addDeliveryOrder(userId, requestAddDeliveryOrder);
+    }
+
 
 
 }
