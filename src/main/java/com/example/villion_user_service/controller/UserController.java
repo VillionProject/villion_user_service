@@ -2,19 +2,16 @@ package com.example.villion_user_service.controller;
 
 import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.CartEntity;
-import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.eunm.RentalMethod;
 import com.example.villion_user_service.domain.request.*;
 import com.example.villion_user_service.domain.response.ResponseLogin;
 import com.example.villion_user_service.domain.response.ResponseUser;
-import com.example.villion_user_service.repository.CartRepository;
 import com.example.villion_user_service.service.CartService;
 import com.example.villion_user_service.service.ProductService;
 import com.example.villion_user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -88,11 +85,17 @@ public class UserController {
 
 
     // 찜 도서관 목록에 넣기/빼기
+    // +1
+
+
+    // -1은 어떻게 함??
+
 
 
 
 
     // 찜 도서 목록에 넣기/빼기
+
 
 
 

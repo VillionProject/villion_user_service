@@ -1,5 +1,10 @@
 package com.example.villion_user_service.domain.eunm;
 
+import com.example.villion_user_service.domain.entity.UserEntity;
+import jakarta.persistence.ManyToMany;
+
+import java.util.List;
+
 public enum Category {
     NOT_SPECIFIED, //지정안함,
     HEALTH_HOBBY, // 건강/취미
@@ -25,17 +30,4 @@ public enum Category {
     ADOLESCENTS, // 청소년
     COMPUTER_MOBILE // 컴퓨터/모바일
 
-
-//    NOT_SPECIFIED, //지정안함
-//    FICTION,
-//    NON_FICTION,
-//    SCIENCE_FICTION,
-//    MYSTERY,
-//    THRILLER,
-//    ROMANCE,
-//    HORROR,
-//    BIOGRAPHY,
-//    HISTORY,
-//    SELF_HELP,
-//    FOR_KIDS
 }

@@ -27,11 +27,11 @@ public class RequestAddDeliveryOrder {
 //    private LocalDate rentalPeriod;
     private LocalDate rentalStartDate; //  대여시작일
     private LocalDate rentalEndDate; // 대여마감일
-    private Long totalRentalQuantity;
+//    private Long totalRentalQuantity;
     private Long shippingCost;
-    private Long totalRentalPrice;
+//    private Long totalRentalPrice;
     private Long usedPoints;
-    private List<ProductEntity> orderList; // 주문 내역은 화면에서 받아서 보여주기
+    private List<OrderDto> orderList; // 주문 내역은 화면에서 받아서 보여주기
 
 
     // 결제 내역 정보

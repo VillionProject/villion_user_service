@@ -1,5 +1,6 @@
 package com.example.villion_user_service.domain.entity;
 
+import com.example.villion_user_service.domain.dto.OrderDto;
 import com.example.villion_user_service.domain.eunm.Category;
 import com.example.villion_user_service.domain.eunm.Grade;
 import com.example.villion_user_service.domain.eunm.LibraryStatus;
@@ -11,7 +12,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Data
 @Entity
@@ -50,12 +50,17 @@ public class UserEntity {
     private int yearlyReadingTarget;
 
     private String familyAccount; // TODO 고민 필요.. 친구맺기 개념
-    private Category interestCategory;
+
+    @ElementCollection(targetClass = Category.class)
+    @CollectionTable(name = "user_interest_category", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private List<Category> interestCategory; // TODO LIST로 바꿔야함?
     private String base_location_id;
 
     @OneToMany // 객체안에 리스트
-    private List<ProductEntity> productList;
+    private List<ProductEntity> productList; // 등록한 상품 리스트
 
+//    private List<OrderDto> orderedList; // 주문 목록 TODO LIST로 바꿔야함?
 
 //    private List<ProductEntity> registeredProducts; // 등록한 상품
 //    private List<ProductEntity> purchasedProducts; // 구매한 상품

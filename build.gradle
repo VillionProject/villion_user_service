@@ -46,6 +46,7 @@ dependencies {
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.1.0'
 //	implementation group: 'org.apache.kafka', name: 'kafka_2.13', version: '3.4.0' // TODO 아래랑 뭐가 다름?
 	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 
 }
