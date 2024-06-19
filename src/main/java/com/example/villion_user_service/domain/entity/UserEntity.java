@@ -60,6 +60,9 @@ public class UserEntity {
     @OneToMany // 객체안에 리스트
     private List<ProductEntity> productList; // 등록한 상품 리스트
 
+    @OneToMany
+    private List<UserEntity> wishLibraryList;
+
 //    private List<OrderDto> orderedList; // 주문 목록 TODO LIST로 바꿔야함?
 
 //    private List<ProductEntity> registeredProducts; // 등록한 상품

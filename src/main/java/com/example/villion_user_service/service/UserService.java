@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
@@ -147,6 +148,24 @@ public class UserService implements UserDetailsService {
 
         return userEntity;
     }
+
+
+
+    public List<UserEntity> toggleWishLibrary(Long userId, Long wishLibraryId) {
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        UserEntity byUserId = userRepository.findByUserId(wishLibraryId);
+
+        // 목록에 있으면
+        if(userEntity.getWishLibraryList().contains(byUserId)) {
+            userEntity.getWishLibraryList().remove(byUserId);
+        } else { // 없으면
+            userEntity.getWishLibraryList().add(byUserId);
+        }
+
+        return userEntity.getWishLibraryList();
+    }
+
+
 
 
 }
