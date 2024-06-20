@@ -2,8 +2,9 @@ package com.example.villion_user_service.controller;
 
 import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.CartEntity;
+import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
-import com.example.villion_user_service.domain.eunm.Category;
+import com.example.villion_user_service.domain.entity.WishLibraryEntity;
 import com.example.villion_user_service.domain.eunm.RentalMethod;
 import com.example.villion_user_service.domain.request.*;
 import com.example.villion_user_service.domain.response.ResponseLogin;
@@ -12,7 +13,6 @@ import com.example.villion_user_service.repository.UserRepository;
 import com.example.villion_user_service.service.CartService;
 import com.example.villion_user_service.service.ProductService;
 import com.example.villion_user_service.service.UserService;
-import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -91,17 +91,19 @@ public class UserController {
     // 찜 도서관 목록에 넣기/빼기
     // 찜하려는 도서관ID가 목록에 없으면, 추가 // 있으면, 제거
     @PostMapping("/{userId}/wishLibrary/toggle")
-    public List<UserEntity> toggleWishLibrary(@PathVariable Long userId, @RequestParam Long wishLibraryId) {
-        List<UserEntity> WishLibraryList = userService.toggleWishLibrary(userId, wishLibraryId);
+    public void toggleWishLibrary(@PathVariable Long userId, @RequestParam Long wishLibraryId) {
 
-        return WishLibraryList;
+        userService.toggleWishLibrary(userId, wishLibraryId);
     }
 
 
 
     // 찜 도서 목록에 넣기/빼기
-
-
+//    @PostMapping("/{userId}/wishProduct/toggle")
+//    public void toggleWishProduct(@PathVariable Long userId, @RequestParam Long productId) {
+//
+//        userService.toggleWishProduct(userId, productId);
+//    }
 
 
 

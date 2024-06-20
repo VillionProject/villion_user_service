@@ -2,12 +2,17 @@ package com.example.villion_user_service.service;
 
 import com.example.villion_user_service.client.BooksServiceClient;
 import com.example.villion_user_service.domain.dto.UserDto;
+import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
+import com.example.villion_user_service.domain.entity.WishLibraryEntity;
+import com.example.villion_user_service.domain.entity.WishProductEntity;
 import com.example.villion_user_service.domain.eunm.Category;
 import com.example.villion_user_service.domain.eunm.Grade;
 import com.example.villion_user_service.domain.eunm.LibraryStatus;
 import com.example.villion_user_service.domain.request.RequestUser;
 import com.example.villion_user_service.repository.UserRepository;
+import com.example.villion_user_service.repository.WishLibraryRepository;
+import com.example.villion_user_service.repository.WishProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -31,7 +36,8 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-
+    private final WishLibraryRepository wishLibraryRepository;
+    private final WishProductRepository wishProductRepository;
 
     public UserDto createUser(UserDto userDto) {
 // ✔ UserDto -> UserEntity 변환 작업(ModelMapper 사용)
@@ -151,21 +157,33 @@ public class UserService implements UserDetailsService {
 
 
 
-    public List<UserEntity> toggleWishLibrary(Long userId, Long wishLibraryId) {
-        UserEntity userEntity = userRepository.findByUserId(userId);
-        UserEntity byUserId = userRepository.findByUserId(wishLibraryId);
+    public void toggleWishLibrary(Long userId, Long wishLibraryId) {
+        WishLibraryEntity byUserIdAndWishLibraryId = wishLibraryRepository.findByUserIdAndWishLibraryId(userId, wishLibraryId);
 
-        // 목록에 있으면
-        if(userEntity.getWishLibraryList().contains(byUserId)) {
-            userEntity.getWishLibraryList().remove(byUserId);
-        } else { // 없으면
-            userEntity.getWishLibraryList().add(byUserId);
+        // 본인은 추가 못함..
+        if(userId.equals(wishLibraryId)) {
+            throw new IllegalArgumentException("본인의 도서관은 찜 목록에 추가할 수 없습니다.");
         }
 
-        return userEntity.getWishLibraryList();
+        if(byUserIdAndWishLibraryId == null) {
+            WishLibraryEntity wishLibraryEntity = WishLibraryEntity.builder()
+                    .wishLibraryId(wishLibraryId)
+                    .userId(userId)
+                    .build();
+            wishLibraryRepository.save(wishLibraryEntity);
+        } else {
+            wishLibraryRepository.delete(byUserIdAndWishLibraryId);
+        }
+
+
+
     }
 
+    // 상품 찜하기
+    public void toggleWishProduct(Long userId, Long productId) {
 
+
+    }
 
 
 }

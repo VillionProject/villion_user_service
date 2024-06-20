@@ -13,7 +13,7 @@ public class ProductEntity {
 
     private Long productId;
 
-//    private String productName;
+    //    private String productName;
 //    private Category category; // enum
     private Long quantity;
 //    private LocalDate rentalPeriod;

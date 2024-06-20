@@ -57,11 +57,14 @@ public class UserEntity {
     private List<Category> interestCategory; // TODO LIST로 바꿔야함?
     private String base_location_id;
 
-    @OneToMany // 객체안에 리스트
-    private List<ProductEntity> productList; // 등록한 상품 리스트
-
-    @OneToMany
-    private List<UserEntity> wishLibraryList;
+//    @OneToMany // 객체안에 리스트
+//    private List<ProductEntity> productList; // 등록한 상품 리스트
+//
+//    @OneToMany
+//    private List<WishLibraryEntity> wishLibraryList; // 찜 도서관
+//
+//    @OneToMany// 객체안에 리스트
+//    private List<WishProductEntity> wishProductList; // 찜 상품
 
 //    private List<OrderDto> orderedList; // 주문 목록 TODO LIST로 바꿔야함?
 
