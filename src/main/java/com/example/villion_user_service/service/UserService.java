@@ -181,7 +181,17 @@ public class UserService implements UserDetailsService {
 
     // 상품 찜하기
     public void toggleWishProduct(Long userId, Long productId) {
+        WishProductEntity byUserIdAndProductId = wishProductRepository.findByUserIdAndProductId(userId, productId);
 
+        if(byUserIdAndProductId == null) {
+            WishProductEntity wishProductEntity = WishProductEntity.builder()
+                    .userId(userId)
+                    .productId(productId)
+                    .build();
+            wishProductRepository.save(wishProductEntity);
+        } else {
+            wishProductRepository.delete(byUserIdAndProductId);
+        }
 
     }
 

@@ -92,18 +92,16 @@ public class UserController {
     // 찜하려는 도서관ID가 목록에 없으면, 추가 // 있으면, 제거
     @PostMapping("/{userId}/wishLibrary/toggle")
     public void toggleWishLibrary(@PathVariable Long userId, @RequestParam Long wishLibraryId) {
-
         userService.toggleWishLibrary(userId, wishLibraryId);
     }
 
 
 
     // 찜 도서 목록에 넣기/빼기
-//    @PostMapping("/{userId}/wishProduct/toggle")
-//    public void toggleWishProduct(@PathVariable Long userId, @RequestParam Long productId) {
-//
-//        userService.toggleWishProduct(userId, productId);
-//    }
+    @PostMapping("/{userId}/wishProduct/toggle")
+    public void toggleWishProduct(@PathVariable Long userId, @RequestParam Long productId) {
+        userService.toggleWishProduct(userId, productId);
+    }
 
 
 
