@@ -3,6 +3,7 @@ package com.example.villion_user_service.controller;
 import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.CartEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
+import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
 import com.example.villion_user_service.domain.eunm.RentalMethod;
 import com.example.villion_user_service.domain.request.*;
 import com.example.villion_user_service.domain.response.ResponseLogin;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -111,8 +113,11 @@ public class UserController {
     }
 
 
-    // TODO 폴더 목록 보기
-
+    // TODO 폴더 목록 보기 - 디폴트로 기본폴더를 만들어서 보여줌
+    @GetMapping("/{userId}/wishProductFolder")
+    public List<WishProductFolderEntity> getWishProductFolder(@PathVariable Long userId) {
+        return userService.getWishProductFolder(userId);
+    }
 
 
     // TODO 찜도서 폴더 상세 보기

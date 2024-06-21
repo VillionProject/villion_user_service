@@ -179,7 +179,8 @@ public class UserService implements UserDetailsService {
 
     // 상품 찜하기
     public void toggleWishProduct(Long userId, RequestAddFolderProduct requestAddFolderProduct) {
-//        WishProductEntity byUserIdAndProductId = wishProductRepository.findByUserIdAndProductId(userId, productId);
+
+
         WishProductFolderEntity folderEntity = wishProductFolderRepository.findByUserId(userId);
 
 
@@ -196,7 +197,6 @@ public class UserService implements UserDetailsService {
                     .map(String::valueOf)
                     .collect(Collectors.joining(","));
 
-//            folderEntity.setProducts(productIdsString);
 
             WishProductFolderEntity wishProductFolder = WishProductFolderEntity.builder()
                     .userId(userId)
@@ -235,25 +235,12 @@ public class UserService implements UserDetailsService {
 
             // 변경된 폴더 엔티티를 저장
             wishProductFolderRepository.save(folderEntity);
-
-
         }
-
-
-//        if(byUserIdAndProductId == null) {
-//            WishProductEntity wishProductEntity = WishProductEntity.builder()
-//                    .userId(userId)
-//                    .productId(productId)
-//                    .build();
-//            wishProductRepository.save(wishProductEntity);
-//        } else {
-//            wishProductRepository.delete(byUserIdAndProductId);
-//        }
-
     }
 
 // 폴더 만들기
     public void addFolderWishProduct(Long userId, RequestAddFolder requestAddFolder) {
+
         WishProductFolderEntity folderEntity = WishProductFolderEntity.builder()
                 .folderName(requestAddFolder.getFolderName())
                 .userId(userId)
@@ -263,5 +250,9 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public List<WishProductFolderEntity> getWishProductFolder(Long userId) {
+        List<WishProductFolderEntity> allByUserId = wishProductFolderRepository.findAllByUserId(userId);
 
+        return allByUserId;
+    }
 }
