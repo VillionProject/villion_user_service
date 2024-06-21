@@ -1,17 +1,18 @@
 package com.example.villion_user_service.service;
 
-import com.example.villion_user_service.client.BooksServiceClient;
 import com.example.villion_user_service.domain.dto.UserDto;
-import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.entity.WishLibraryEntity;
 import com.example.villion_user_service.domain.entity.WishProductEntity;
-import com.example.villion_user_service.domain.eunm.Category;
+import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
 import com.example.villion_user_service.domain.eunm.Grade;
 import com.example.villion_user_service.domain.eunm.LibraryStatus;
+import com.example.villion_user_service.domain.request.RequestAddFolder;
+import com.example.villion_user_service.domain.request.RequestAddFolderProduct;
 import com.example.villion_user_service.domain.request.RequestUser;
 import com.example.villion_user_service.repository.UserRepository;
 import com.example.villion_user_service.repository.WishLibraryRepository;
+import com.example.villion_user_service.repository.WishProductFolderRepository;
 import com.example.villion_user_service.repository.WishProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -22,14 +23,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.lang.reflect.Field;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +35,7 @@ public class UserService implements UserDetailsService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final WishLibraryRepository wishLibraryRepository;
     private final WishProductRepository wishProductRepository;
+    private final WishProductFolderRepository wishProductFolderRepository;
 
     public UserDto createUser(UserDto userDto) {
 // ✔ UserDto -> UserEntity 변환 작업(ModelMapper 사용)
@@ -180,20 +178,90 @@ public class UserService implements UserDetailsService {
     }
 
     // 상품 찜하기
-    public void toggleWishProduct(Long userId, Long productId) {
-        WishProductEntity byUserIdAndProductId = wishProductRepository.findByUserIdAndProductId(userId, productId);
+    public void toggleWishProduct(Long userId, RequestAddFolderProduct requestAddFolderProduct) {
+//        WishProductEntity byUserIdAndProductId = wishProductRepository.findByUserIdAndProductId(userId, productId);
+        WishProductFolderEntity folderEntity = wishProductFolderRepository.findByUserId(userId);
 
-        if(byUserIdAndProductId == null) {
-            WishProductEntity wishProductEntity = WishProductEntity.builder()
+
+        // 처음 찜하기를 눌렀을 경우, 배열을 만들어야함..
+        if(folderEntity == null) {
+            // 제품 ID를 저장할 리스트를 생성
+            List<Long> productIds = new ArrayList<>();
+
+            // 제품 ID를 리스트에 추가
+            productIds.add(requestAddFolderProduct.getProductId());
+
+            // 리스트를 문자열로 변환하여 저장
+            String productIdsString = productIds.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(","));
+
+//            folderEntity.setProducts(productIdsString);
+
+            WishProductFolderEntity wishProductFolder = WishProductFolderEntity.builder()
                     .userId(userId)
-                    .productId(productId)
+                    .folderName(requestAddFolderProduct.getFolderName())
+                    .products(productIdsString)
                     .build();
-            wishProductRepository.save(wishProductEntity);
+
+            // 저장
+            wishProductFolderRepository.save(wishProductFolder);
+
         } else {
-            wishProductRepository.delete(byUserIdAndProductId);
+            String products = folderEntity.getProducts();
+
+
+            // 기존 제품 ID 문자열을 배열로 변환
+            List<String> productList = new ArrayList<>(Arrays.asList(products.split(",")));
+
+            // 요청된 제품 ID를 문자열로 변환
+            String productIdString = String.valueOf(requestAddFolderProduct.getProductId());
+
+            // 제품이 이미 목록에 있는지 확인
+            if (productList.contains(productIdString)) {
+                // 제품이 목록에 있으면 제거
+                productList.remove(productIdString);
+            } else {
+                // 제품이 목록에 없으면 추가
+                productList.add(productIdString);
+            }
+
+            // 배열을 다시 문자열로 변환하여 저장
+            String updatedProductIdsString = productList.stream()
+                    .collect(Collectors.joining(","));
+
+            // 폴더 엔티티의 제품 ID 문자열을 업데이트
+            folderEntity.setProducts(updatedProductIdsString);
+
+            // 변경된 폴더 엔티티를 저장
+            wishProductFolderRepository.save(folderEntity);
+
+
         }
 
+
+//        if(byUserIdAndProductId == null) {
+//            WishProductEntity wishProductEntity = WishProductEntity.builder()
+//                    .userId(userId)
+//                    .productId(productId)
+//                    .build();
+//            wishProductRepository.save(wishProductEntity);
+//        } else {
+//            wishProductRepository.delete(byUserIdAndProductId);
+//        }
+
     }
+
+// 폴더 만들기
+    public void addFolderWishProduct(Long userId, RequestAddFolder requestAddFolder) {
+        WishProductFolderEntity folderEntity = WishProductFolderEntity.builder()
+                .folderName(requestAddFolder.getFolderName())
+                .userId(userId)
+                .build();
+
+        wishProductFolderRepository.save(folderEntity);
+    }
+
 
 
 }

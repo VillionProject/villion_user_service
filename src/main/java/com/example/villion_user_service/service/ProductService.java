@@ -1,19 +1,15 @@
 package com.example.villion_user_service.service;
 
-import com.example.villion_user_service.domain.dto.AddRentedDeliveryOrderDto2;
 import com.example.villion_user_service.domain.dto.ProductDto;
-import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.request.RequestAddDeliveryOrder;
 import com.example.villion_user_service.domain.request.RequestAddProduct;
-import com.example.villion_user_service.kafka.KafkaProducer;
 import com.example.villion_user_service.kafka.DeliveryOrderKafkaProducer;
+import com.example.villion_user_service.kafka.KafkaProducer;
 import com.example.villion_user_service.kafka.TopicConfig;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

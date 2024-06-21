@@ -13,14 +13,8 @@ public class ProductEntity {
 
     private Long productId;
 
-    //    private String productName;
-//    private Category category; // enum
-    private Long quantity;
-//    private LocalDate rentalPeriod;
-    private Long price;
-//    private RentalMethod rentalMethod; // enum
-//    private boolean popularity;
-//    private String rentalLocation;
-//    private String description;
+    private String productImage;
+
+    private String folderName;
 
 }

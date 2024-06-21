@@ -1,7 +1,6 @@
 package com.example.villion_user_service.domain.request;
 
 import com.example.villion_user_service.domain.dto.OrderDto;
-import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.eunm.PaymentMethod;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

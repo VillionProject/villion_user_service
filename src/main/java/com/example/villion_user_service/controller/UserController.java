@@ -2,9 +2,7 @@ package com.example.villion_user_service.controller;
 
 import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.CartEntity;
-import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
-import com.example.villion_user_service.domain.entity.WishLibraryEntity;
 import com.example.villion_user_service.domain.eunm.RentalMethod;
 import com.example.villion_user_service.domain.request.*;
 import com.example.villion_user_service.domain.response.ResponseLogin;
@@ -19,7 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -97,12 +96,30 @@ public class UserController {
 
 
 
-    // 찜 도서 목록에 넣기/빼기
-    @PostMapping("/{userId}/wishProduct/toggle")
-    public void toggleWishProduct(@PathVariable Long userId, @RequestParam Long productId) {
-        userService.toggleWishProduct(userId, productId);
+    // TODO 찜 도서 폴더 만들기
+    @PostMapping("/{userId}/wishProduct/folder")
+    public void addFolderWishProduct(@PathVariable Long userId, @RequestBody RequestAddFolder requestAddFolder) {
+        userService.addFolderWishProduct(userId, requestAddFolder);
     }
 
+
+    // 찜 도서 목록에 넣기/빼기
+    // TODO 폴더에 넣을 수 있어야 함..
+    @PostMapping("/{userId}/wishProduct/toggle")
+    public void toggleWishProduct(@PathVariable Long userId, @RequestBody RequestAddFolderProduct requestAddFolderProduct) {
+        userService.toggleWishProduct(userId, requestAddFolderProduct);
+    }
+
+
+    // TODO 폴더 목록 보기
+
+
+
+    // TODO 찜도서 폴더 상세 보기
+
+
+
+    // TODO 찜 도서 폴더 옮기기
 
 
 
@@ -199,7 +216,26 @@ public class UserController {
         productService.addProduct(userId, requestAddProduct);
     }
 
-    // 직거래 신청(1:1 채팅으로 넘어가기)
+
+
+
+    // TODO 등록된 제품 보기 + 다른 곳에 문제 있어도 제품은 볼 수 있어야 함..(분산처리)
+
+
+    // TODO 제품 상세 보기
+
+
+    // TODO 제품 상세 보기 - 이 책을 가지고 있는 직거래 도서관 보여주기
+
+    // TODO 이 책과 같은 카테고리 도서 목록
+
+    // TODO 이 책과 함께 주문된 도서
+
+    // TODO 이 시리즈의 다른 책
+
+
+
+    // TODO 직거래 신청(1:1 채팅으로 넘어가기)
 
 
 
