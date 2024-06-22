@@ -3,7 +3,6 @@ package com.example.villion_user_service.service;
 import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.entity.WishLibraryEntity;
-import com.example.villion_user_service.domain.entity.WishProductEntity;
 import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
 import com.example.villion_user_service.domain.eunm.Grade;
 import com.example.villion_user_service.domain.eunm.LibraryStatus;
@@ -180,12 +179,25 @@ public class UserService implements UserDetailsService {
     // 상품 찜하기
     public void toggleWishProduct(Long userId, RequestAddFolderProduct requestAddFolderProduct) {
 
+        // TODO folderEntity에 값이 여러개 나올 때는  어떻게 ?
+//        WishProductFolderEntity folderEntity = wishProductFolderRepository.findByUserId(userId);
+        Optional<WishProductFolderEntity> optionalFolderEntity  = wishProductFolderRepository.findByUserIdAndFolderName(userId, requestAddFolderProduct.getFolderName());
 
-        WishProductFolderEntity folderEntity = wishProductFolderRepository.findByUserId(userId);
+
+        // TODO 값을 진짜 처음으로 눌렀을 때
+        if (optionalFolderEntity.isEmpty()) {
+            WishProductFolderEntity folderEntity = optionalFolderEntity.get();
+
+
+
+        }
+
 
 
         // 처음 찜하기를 눌렀을 경우, 배열을 만들어야함..
-        if(folderEntity == null) {
+        if(optionalFolderEntity.get().getProducts()==null) {
+
+
             // 제품 ID를 저장할 리스트를 생성
             List<Long> productIds = new ArrayList<>();
 
@@ -197,18 +209,21 @@ public class UserService implements UserDetailsService {
                     .map(String::valueOf)
                     .collect(Collectors.joining(","));
 
+            folderEntity.get().setProducts(productIdsString);
 
-            WishProductFolderEntity wishProductFolder = WishProductFolderEntity.builder()
-                    .userId(userId)
-                    .folderName(requestAddFolderProduct.getFolderName())
-                    .products(productIdsString)
-                    .build();
+//            WishProductFolderEntity wishProductFolder = WishProductFolderEntity.builder()
+//                    .userId(userId)
+//                    .folderName(requestAddFolderProduct.getFolderName())
+//                    .products(productIdsString)
+//                    .build();
+
+
 
             // 저장
-            wishProductFolderRepository.save(wishProductFolder);
+            wishProductFolderRepository.save(folderEntity);
 
         } else {
-            String products = folderEntity.getProducts();
+            String products = folderEntity.get().getProducts();
 
 
             // 기존 제품 ID 문자열을 배열로 변환
@@ -231,10 +246,12 @@ public class UserService implements UserDetailsService {
                     .collect(Collectors.joining(","));
 
             // 폴더 엔티티의 제품 ID 문자열을 업데이트
-            folderEntity.setProducts(updatedProductIdsString);
+            folderEntity.get().setProducts(updatedProductIdsString);
 
+
+            System.out.println(folderEntity);
             // 변경된 폴더 엔티티를 저장
-            wishProductFolderRepository.save(folderEntity);
+//            wishProductFolderRepository.save(folderEntity);
         }
     }
 
@@ -251,8 +268,24 @@ public class UserService implements UserDetailsService {
 
 
     public List<WishProductFolderEntity> getWishProductFolder(Long userId) {
-        List<WishProductFolderEntity> allByUserId = wishProductFolderRepository.findAllByUserId(userId);
+        // 디폴트로 "기본폴더" 만들어서 보여주기
+        // 기본 폴더가 있는지 확인
+        Optional<WishProductFolderEntity> defaultFolder = wishProductFolderRepository.findByUserIdAndFolderName(userId, "기본폴더");
+        if(defaultFolder.isEmpty()) {
+            WishProductFolderEntity folderEntity = WishProductFolderEntity.builder()
+                    .userId(userId)
+                    .folderName("기본폴더")
+                    .build();
 
+            wishProductFolderRepository.save(folderEntity);
+        }
+
+
+        List<WishProductFolderEntity> allByUserId = wishProductFolderRepository.findAllByUserId(userId);
         return allByUserId;
+    }
+
+    public List<WishProductFolderEntity> wishProductFolderDetail(Long userId, String folderName) {
+        return wishProductFolderRepository.findAllByUserIdAndFolderName(userId, folderName);
     }
 }

@@ -98,7 +98,7 @@ public class UserController {
 
 
 
-    // TODO 찜 도서 폴더 만들기
+    // 찜 도서 폴더 만들기
     @PostMapping("/{userId}/wishProduct/folder")
     public void addFolderWishProduct(@PathVariable Long userId, @RequestBody RequestAddFolder requestAddFolder) {
         userService.addFolderWishProduct(userId, requestAddFolder);
@@ -106,14 +106,13 @@ public class UserController {
 
 
     // 찜 도서 목록에 넣기/빼기
-    // TODO 폴더에 넣을 수 있어야 함..
     @PostMapping("/{userId}/wishProduct/toggle")
     public void toggleWishProduct(@PathVariable Long userId, @RequestBody RequestAddFolderProduct requestAddFolderProduct) {
         userService.toggleWishProduct(userId, requestAddFolderProduct);
     }
 
 
-    // TODO 폴더 목록 보기 - 디폴트로 기본폴더를 만들어서 보여줌
+    // 폴더 목록 보기
     @GetMapping("/{userId}/wishProductFolder")
     public List<WishProductFolderEntity> getWishProductFolder(@PathVariable Long userId) {
         return userService.getWishProductFolder(userId);
@@ -121,7 +120,10 @@ public class UserController {
 
 
     // TODO 찜도서 폴더 상세 보기
-
+    @GetMapping("/{userId}/wishProductFolder/Detail")
+    public List<WishProductFolderEntity> wishProductFolderDetail(@PathVariable Long userId, @RequestParam String folderName) {
+        return userService.wishProductFolderDetail(userId, folderName);
+    }
 
 
     // TODO 찜 도서 폴더 옮기기
