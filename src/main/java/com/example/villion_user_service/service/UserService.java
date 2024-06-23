@@ -184,13 +184,24 @@ public class UserService implements UserDetailsService {
         Optional<WishProductFolderEntity> optionalFolderEntity  = wishProductFolderRepository.findByUserIdAndFolderName(userId, requestAddFolderProduct.getFolderName());
 
 
-        // TODO 값을 진짜 처음으로 눌렀을 때
-        if (optionalFolderEntity.isEmpty()) {
-            WishProductFolderEntity folderEntity = optionalFolderEntity.get();
+        if (optionalFolderEntity.isPresent()) {
+            // Optional이 값을 포함하고 있을 때
+            //
 
 
-
+        } else {
+            // Optional이 비어있는 경우, 새로운 폴더 엔티티를 생성하고 저장하는 로직을 여기에 추가
         }
+
+
+
+//        // TODO 값을 진짜 처음으로 눌렀을 때
+//        if (optionalFolderEntity.isEmpty()) {
+//            WishProductFolderEntity folderEntity = optionalFolderEntity.get();
+//
+//
+//
+//        }
 
 
 
