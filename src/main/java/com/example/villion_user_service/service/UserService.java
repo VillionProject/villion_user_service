@@ -1,6 +1,7 @@
 package com.example.villion_user_service.service;
 
 import com.example.villion_user_service.domain.dto.UserDto;
+import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.entity.WishLibraryEntity;
 import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
@@ -9,6 +10,8 @@ import com.example.villion_user_service.domain.eunm.LibraryStatus;
 import com.example.villion_user_service.domain.request.RequestAddFolder;
 import com.example.villion_user_service.domain.request.RequestAddFolderProduct;
 import com.example.villion_user_service.domain.request.RequestUser;
+import com.example.villion_user_service.kafka.GetProductsByLocationProducer;
+import com.example.villion_user_service.kafka.TopicConfig;
 import com.example.villion_user_service.repository.UserRepository;
 import com.example.villion_user_service.repository.WishLibraryRepository;
 import com.example.villion_user_service.repository.WishProductFolderRepository;
@@ -26,7 +29,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +38,7 @@ public class UserService implements UserDetailsService {
     private final WishLibraryRepository wishLibraryRepository;
     private final WishProductRepository wishProductRepository;
     private final WishProductFolderRepository wishProductFolderRepository;
+    private final GetProductsByLocationProducer getProductsByLocationProducer;
 
     public UserDto createUser(UserDto userDto) {
 // ✔ UserDto -> UserEntity 변환 작업(ModelMapper 사용)
@@ -181,47 +184,14 @@ public class UserService implements UserDetailsService {
     public void toggleWishProduct(Long userId, RequestAddFolderProduct requestAddFolderProduct) {
 
         WishProductFolderEntity folderEntity = wishProductFolderRepository.findByUserIdAndFolderName(userId, requestAddFolderProduct.getFolderName());
-//        Optional<WishProductFolderEntity> optionalFolderEntity  = wishProductFolderRepository.findByUserIdAndFolderName(userId, requestAddFolderProduct.getFolderName());
 
-
-//        if (optionalFolderEntity.isPresent()) {
-//            // Optional이 값을 포함하고 있을 때
-//
-//
-//
-//        } else {
-//            // Optional이 비어있는 경우, 새로운 폴더 엔티티를 생성하고 저장하는 로직을 여기에 추가
-//        }
-//
-//
-//
-////        // TODO 값을 진짜 처음으로 눌렀을 때
-////        if (optionalFolderEntity.isEmpty()) {
-////            WishProductFolderEntity folderEntity = optionalFolderEntity.get();
-////
-////
-////
-////        }
-
-
-
-//        // 처음 찜하기를 눌렀을 경우, 배열을 만들어야함..
+        // 처음 찜하기를 눌렀을 경우, 배열을 만들어야함..
         if(folderEntity.getProducts()==null) {
-//
-//
             // 제품 ID를 저장할 리스트를 생성
             List<Long> productIds = new ArrayList<>();
 
             // 제품 ID를 리스트에 추가
             productIds.add(requestAddFolderProduct.getProductId());
-
-//            // 리스트를 JSON 문자열로 변환하여 저장
-//            String productIdsJson = "[" + productIds.stream()
-//                    .map(String::valueOf)
-//                    .collect(Collectors.joining(",")) + "]";
-//
-//            folderEntity.setProducts(productIdsJson);
-
 
             // Gson 객체 생성
             Gson gson = new Gson();
@@ -290,6 +260,14 @@ public class UserService implements UserDetailsService {
     }
 
     public List<WishProductFolderEntity> wishProductFolderDetail(Long userId, String folderName) {
-        return wishProductFolderRepository.findAllByUserIdAndFolderName(userId, folderName);
+        return null;
+    }
+
+
+    public List<ProductEntity> getProductsByLocation(Long userId) {
+        UserEntity byUserId = userRepository.findByUserId(userId);
+        getProductsByLocationProducer.send(TopicConfig.getProductsByLocation, byUserId.getBase_location_id());
+
+        return null;
     }
 }

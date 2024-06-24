@@ -2,6 +2,7 @@ package com.example.villion_user_service.controller;
 
 import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.CartEntity;
+import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
 import com.example.villion_user_service.domain.eunm.RentalMethod;
@@ -119,15 +120,11 @@ public class UserController {
     }
 
 
-    // TODO 찜도서 폴더 상세 보기
+    // 찜도서 폴더 상세 보기
     @GetMapping("/{userId}/wishProductFolder/Detail")
     public List<WishProductFolderEntity> wishProductFolderDetail(@PathVariable Long userId, @RequestParam String folderName) {
         return userService.wishProductFolderDetail(userId, folderName);
     }
-
-
-    // TODO 찜 도서 폴더 옮기기
-
 
 
     // 장바구니 담기
@@ -226,17 +223,24 @@ public class UserController {
 
 
 
-    // TODO 등록된 제품 보기 + 다른 곳에 문제 있어도 제품은 볼 수 있어야 함..(분산처리)
-
+    // TODO 등록된 제품 보기(메인화면) + 다른 곳에 문제 있어도 제품은 볼 수 있어야 함..(분산처리)
+    @GetMapping("/getProductsByLocation/{userId}")
+    public List<ProductEntity> getProductsByLocation(@PathVariable Long userId) {
+        return userService.getProductsByLocation(userId);
+    }
 
     // TODO 제품 상세 보기
 
 
+
     // TODO 제품 상세 보기 - 이 책을 가지고 있는 직거래 도서관 보여주기
+
 
     // TODO 이 책과 같은 카테고리 도서 목록
 
+
     // TODO 이 책과 함께 주문된 도서
+
 
     // TODO 이 시리즈의 다른 책
 

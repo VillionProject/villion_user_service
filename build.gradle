@@ -47,6 +47,7 @@ dependencies {
 //	implementation group: 'org.apache.kafka', name: 'kafka_2.13', version: '3.4.0' // TODO 아래랑 뭐가 다름?
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 	implementation 'com.google.code.gson:gson:2.8.8'
 

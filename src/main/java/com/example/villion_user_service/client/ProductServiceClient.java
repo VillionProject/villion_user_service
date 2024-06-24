@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 @FeignClient(name = "product-service")
-public interface BooksServiceClient {
+public interface ProductServiceClient {
 
     @GetMapping("/api/v1/product/{productId}")
     List<ResponseBooks> getBooks(@PathVariable("productId") Long productId);

@@ -1,9 +1,8 @@
 package com.example.villion_user_service.service;
 
-import com.example.villion_user_service.client.BooksServiceClient;
+import com.example.villion_user_service.client.ProductServiceClient;
 import com.example.villion_user_service.domain.entity.CartEntity;
 import com.example.villion_user_service.domain.request.RequestCart;
-import com.example.villion_user_service.domain.response.ResponseBooks;
 import com.example.villion_user_service.repository.CartRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CartService {
     private final CartRepository cartRepository;
-    private final BooksServiceClient booksServiceClient;
+    private final ProductServiceClient booksServiceClient;
     ModelMapper mapper = new ModelMapper();
 
     public void addCart(RequestCart requestCart) {
