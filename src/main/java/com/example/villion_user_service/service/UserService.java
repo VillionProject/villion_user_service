@@ -13,6 +13,7 @@ import com.example.villion_user_service.repository.UserRepository;
 import com.example.villion_user_service.repository.WishLibraryRepository;
 import com.example.villion_user_service.repository.WishProductFolderRepository;
 import com.example.villion_user_service.repository.WishProductRepository;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -179,90 +180,82 @@ public class UserService implements UserDetailsService {
     // 상품 찜하기
     public void toggleWishProduct(Long userId, RequestAddFolderProduct requestAddFolderProduct) {
 
-        // TODO folderEntity에 값이 여러개 나올 때는  어떻게 ?
-//        WishProductFolderEntity folderEntity = wishProductFolderRepository.findByUserId(userId);
-        Optional<WishProductFolderEntity> optionalFolderEntity  = wishProductFolderRepository.findByUserIdAndFolderName(userId, requestAddFolderProduct.getFolderName());
+        WishProductFolderEntity folderEntity = wishProductFolderRepository.findByUserIdAndFolderName(userId, requestAddFolderProduct.getFolderName());
+//        Optional<WishProductFolderEntity> optionalFolderEntity  = wishProductFolderRepository.findByUserIdAndFolderName(userId, requestAddFolderProduct.getFolderName());
 
 
-        if (optionalFolderEntity.isPresent()) {
-            // Optional이 값을 포함하고 있을 때
-            //
-
-
-        } else {
-            // Optional이 비어있는 경우, 새로운 폴더 엔티티를 생성하고 저장하는 로직을 여기에 추가
-        }
-
-
-
-//        // TODO 값을 진짜 처음으로 눌렀을 때
-//        if (optionalFolderEntity.isEmpty()) {
-//            WishProductFolderEntity folderEntity = optionalFolderEntity.get();
+//        if (optionalFolderEntity.isPresent()) {
+//            // Optional이 값을 포함하고 있을 때
 //
 //
 //
+//        } else {
+//            // Optional이 비어있는 경우, 새로운 폴더 엔티티를 생성하고 저장하는 로직을 여기에 추가
 //        }
+//
+//
+//
+////        // TODO 값을 진짜 처음으로 눌렀을 때
+////        if (optionalFolderEntity.isEmpty()) {
+////            WishProductFolderEntity folderEntity = optionalFolderEntity.get();
+////
+////
+////
+////        }
 
 
 
-        // 처음 찜하기를 눌렀을 경우, 배열을 만들어야함..
-        if(optionalFolderEntity.get().getProducts()==null) {
-
-
+//        // 처음 찜하기를 눌렀을 경우, 배열을 만들어야함..
+        if(folderEntity.getProducts()==null) {
+//
+//
             // 제품 ID를 저장할 리스트를 생성
             List<Long> productIds = new ArrayList<>();
 
             // 제품 ID를 리스트에 추가
             productIds.add(requestAddFolderProduct.getProductId());
 
-            // 리스트를 문자열로 변환하여 저장
-            String productIdsString = productIds.stream()
-                    .map(String::valueOf)
-                    .collect(Collectors.joining(","));
-
-            folderEntity.get().setProducts(productIdsString);
-
-//            WishProductFolderEntity wishProductFolder = WishProductFolderEntity.builder()
-//                    .userId(userId)
-//                    .folderName(requestAddFolderProduct.getFolderName())
-//                    .products(productIdsString)
-//                    .build();
+//            // 리스트를 JSON 문자열로 변환하여 저장
+//            String productIdsJson = "[" + productIds.stream()
+//                    .map(String::valueOf)
+//                    .collect(Collectors.joining(",")) + "]";
+//
+//            folderEntity.setProducts(productIdsJson);
 
 
+            // Gson 객체 생성
+            Gson gson = new Gson();
+
+            // 리스트를 JSON 형식으로 변환하여 저장
+            String productIdsJson = gson.toJson(productIds);
+            folderEntity.setProducts(productIdsJson);
 
             // 저장
             wishProductFolderRepository.save(folderEntity);
 
         } else {
-            String products = folderEntity.get().getProducts();
+            // 기존의 제품 ID 문자열을 Gson을 사용하여 배열로 변환
+            Gson gson = new Gson();
+            Long[] existingProductIds = gson.fromJson(folderEntity.getProducts(), Long[].class);
 
+            // 요청된 제품 ID를 포함하고 있는지 확인
+            List<Long> productList = new ArrayList<>(Arrays.asList(existingProductIds));
+            Long requestedProductId = requestAddFolderProduct.getProductId();
 
-            // 기존 제품 ID 문자열을 배열로 변환
-            List<String> productList = new ArrayList<>(Arrays.asList(products.split(",")));
-
-            // 요청된 제품 ID를 문자열로 변환
-            String productIdString = String.valueOf(requestAddFolderProduct.getProductId());
-
-            // 제품이 이미 목록에 있는지 확인
-            if (productList.contains(productIdString)) {
-                // 제품이 목록에 있으면 제거
-                productList.remove(productIdString);
+            if (productList.contains(requestedProductId)) {
+                // 제품이 이미 목록에 있으면 제거
+                productList.remove(requestedProductId);
             } else {
                 // 제품이 목록에 없으면 추가
-                productList.add(productIdString);
+                productList.add(requestedProductId);
             }
 
-            // 배열을 다시 문자열로 변환하여 저장
-            String updatedProductIdsString = productList.stream()
-                    .collect(Collectors.joining(","));
+            // 리스트를 다시 JSON 형식의 문자열로 변환하여 저장
+            String updatedProductIdsJson = gson.toJson(productList);
+            folderEntity.setProducts(updatedProductIdsJson);
 
-            // 폴더 엔티티의 제품 ID 문자열을 업데이트
-            folderEntity.get().setProducts(updatedProductIdsString);
-
-
-            System.out.println(folderEntity);
             // 변경된 폴더 엔티티를 저장
-//            wishProductFolderRepository.save(folderEntity);
+            wishProductFolderRepository.save(folderEntity);
         }
     }
 
@@ -281,8 +274,8 @@ public class UserService implements UserDetailsService {
     public List<WishProductFolderEntity> getWishProductFolder(Long userId) {
         // 디폴트로 "기본폴더" 만들어서 보여주기
         // 기본 폴더가 있는지 확인
-        Optional<WishProductFolderEntity> defaultFolder = wishProductFolderRepository.findByUserIdAndFolderName(userId, "기본폴더");
-        if(defaultFolder.isEmpty()) {
+        WishProductFolderEntity defaultFolder = wishProductFolderRepository.findByUserIdAndFolderName(userId, "기본폴더");
+        if(!Objects.equals(defaultFolder.getFolderName(), "기본폴더")) {
             WishProductFolderEntity folderEntity = WishProductFolderEntity.builder()
                     .userId(userId)
                     .folderName("기본폴더")
@@ -296,7 +289,7 @@ public class UserService implements UserDetailsService {
         return allByUserId;
     }
 
-    public List<WishProductFolderEntity> wishProductFolderDetail(Long userId, String folderName) {
-        return wishProductFolderRepository.findAllByUserIdAndFolderName(userId, folderName);
-    }
+//    public List<WishProductFolderEntity> wishProductFolderDetail(Long userId, String folderName) {
+//        return wishProductFolderRepository.findAllByUserIdAndFolderName(userId, folderName);
+//    }
 }
