@@ -15,4 +15,6 @@ public interface WishProductFolderRepository extends CrudRepository<WishProductF
     List<WishProductFolderEntity> findAllByUserId(Long userId);
 
     WishProductFolderEntity findByUserIdAndFolderName(Long userId, String folderName);
+
+    List<WishProductFolderEntity> findAllByUserIdAndFolderName(Long userId, String folderName);
 }

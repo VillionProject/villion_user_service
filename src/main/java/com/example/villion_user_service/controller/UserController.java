@@ -120,10 +120,10 @@ public class UserController {
 
 
     // TODO 찜도서 폴더 상세 보기
-//    @GetMapping("/{userId}/wishProductFolder/Detail")
-//    public List<WishProductFolderEntity> wishProductFolderDetail(@PathVariable Long userId, @RequestParam String folderName) {
-//        return userService.wishProductFolderDetail(userId, folderName);
-//    }
+    @GetMapping("/{userId}/wishProductFolder/Detail")
+    public List<WishProductFolderEntity> wishProductFolderDetail(@PathVariable Long userId, @RequestParam String folderName) {
+        return userService.wishProductFolderDetail(userId, folderName);
+    }
 
 
     // TODO 찜 도서 폴더 옮기기

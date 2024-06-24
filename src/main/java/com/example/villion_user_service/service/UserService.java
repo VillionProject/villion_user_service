@@ -289,7 +289,7 @@ public class UserService implements UserDetailsService {
         return allByUserId;
     }
 
-//    public List<WishProductFolderEntity> wishProductFolderDetail(Long userId, String folderName) {
-//        return wishProductFolderRepository.findAllByUserIdAndFolderName(userId, folderName);
-//    }
+    public List<WishProductFolderEntity> wishProductFolderDetail(Long userId, String folderName) {
+        return wishProductFolderRepository.findAllByUserIdAndFolderName(userId, folderName);
+    }
 }
