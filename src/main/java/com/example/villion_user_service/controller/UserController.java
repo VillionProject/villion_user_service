@@ -214,14 +214,11 @@ public class UserController {
     }
 
 
-
     // 제품 등록
     @PostMapping("/addProduct/{userId}")
     public void addProduct(@PathVariable Long userId, @RequestBody RequestAddProduct requestAddProduct) {
         productService.addProduct(userId, requestAddProduct);
     }
-
-
 
 
     // TODO 등록된 제품 보기(메인화면) + 다른 곳에 문제 있어도 제품은 볼 수 있어야 함..(분산처리)
@@ -230,12 +227,13 @@ public class UserController {
         return userService.getProductsByLocation(userId);
     }
 
-    // TODO 제품 상세 보기
 
 
-
-    // TODO 제품 상세 보기 - 이 책을 가지고 있는 직거래 도서관 보여주기
-
+    @GetMapping("/getGetLibraryWithProduct/{userId}")
+    public String getGetLibraryWithProduct(@PathVariable Long userId) {
+        Optional<UserEntity> byUserId = userService.findByUserId(userId);
+        return byUserId.get().getLibraryName();
+    }
 
     // TODO 이 책과 같은 카테고리 도서 목록
 
