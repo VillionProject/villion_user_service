@@ -1,7 +1,7 @@
 package com.example.villion_user_service.service;
 
+import com.example.villion_user_service.client.ProductServiceClient;
 import com.example.villion_user_service.domain.dto.UserDto;
-import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.entity.WishLibraryEntity;
 import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
@@ -10,6 +10,7 @@ import com.example.villion_user_service.domain.eunm.LibraryStatus;
 import com.example.villion_user_service.domain.request.RequestAddFolder;
 import com.example.villion_user_service.domain.request.RequestAddFolderProduct;
 import com.example.villion_user_service.domain.request.RequestUser;
+import com.example.villion_user_service.domain.response.ResponseProducts;
 import com.example.villion_user_service.kafka.GetProductsByLocationProducer;
 import com.example.villion_user_service.kafka.TopicConfig;
 import com.example.villion_user_service.repository.UserRepository;
@@ -39,6 +40,7 @@ public class UserService implements UserDetailsService {
     private final WishProductRepository wishProductRepository;
     private final WishProductFolderRepository wishProductFolderRepository;
     private final GetProductsByLocationProducer getProductsByLocationProducer;
+    private final ProductServiceClient productServiceClient;
 
     public UserDto createUser(UserDto userDto) {
 // ✔ UserDto -> UserEntity 변환 작업(ModelMapper 사용)
@@ -255,8 +257,7 @@ public class UserService implements UserDetailsService {
         }
 
 
-        List<WishProductFolderEntity> allByUserId = wishProductFolderRepository.findAllByUserId(userId);
-        return allByUserId;
+        return wishProductFolderRepository.findAllByUserId(userId);
     }
 
     public List<WishProductFolderEntity> wishProductFolderDetail(Long userId, String folderName) {
@@ -264,10 +265,10 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public List<ProductEntity> getProductsByLocation(Long userId) {
+    public List<ResponseProducts> getProductsByLocation(Long userId) {
         UserEntity byUserId = userRepository.findByUserId(userId);
         getProductsByLocationProducer.send(TopicConfig.getProductsByLocation, byUserId.getBase_location_id());
 
-        return null;
+        return productServiceClient.getProductsByLocation();
     }
 }

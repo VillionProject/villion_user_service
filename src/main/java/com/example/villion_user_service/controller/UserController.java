@@ -8,6 +8,7 @@ import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
 import com.example.villion_user_service.domain.eunm.RentalMethod;
 import com.example.villion_user_service.domain.request.*;
 import com.example.villion_user_service.domain.response.ResponseLogin;
+import com.example.villion_user_service.domain.response.ResponseProducts;
 import com.example.villion_user_service.domain.response.ResponseUser;
 import com.example.villion_user_service.repository.UserRepository;
 import com.example.villion_user_service.service.CartService;
@@ -225,7 +226,7 @@ public class UserController {
 
     // TODO 등록된 제품 보기(메인화면) + 다른 곳에 문제 있어도 제품은 볼 수 있어야 함..(분산처리)
     @GetMapping("/getProductsByLocation/{userId}")
-    public List<ProductEntity> getProductsByLocation(@PathVariable Long userId) {
+    public List<ResponseProducts> getProductsByLocation(@PathVariable Long userId) {
         return userService.getProductsByLocation(userId);
     }
 
