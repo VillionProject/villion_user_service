@@ -2,6 +2,7 @@ package com.example.villion_user_service.service;
 
 import com.example.villion_user_service.client.ProductServiceClient;
 import com.example.villion_user_service.domain.dto.UserDto;
+import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.entity.WishLibraryEntity;
 import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
@@ -271,4 +272,5 @@ public class UserService implements UserDetailsService {
 
         return productServiceClient.getProductsByLocation();
     }
+
 }

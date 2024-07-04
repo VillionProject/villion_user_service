@@ -54,19 +54,14 @@ public class WebSecurity{
         // 인가(접근권한) 설정
         http.authorizeHttpRequests((authz) -> authz
                                 .requestMatchers(new AntPathRequestMatcher("/**")).permitAll() // 모든 요청에 대해
-                                .requestMatchers(new AntPathRequestMatcher("/signup", "POST")).permitAll() // 회원가입 전체 허용
-//                                .requestMatchers(new AntPathRequestMatcher("/test", "GET")).permitAll() // 내정보 조회
                                 .requestMatchers("/**").access(
                                         new WebExpressionAuthorizationManager("hasIpAddress('127.0.0.1') or hasIpAddress('172.30.1.48')"))
-//                              .requestMatchers("/**").access(this::hasIpAddress)
-//                                .requestMatchers("/**").access(
-//                                        new WebExpressionAuthorizationManager("hasIpAddress('127.0.0.1') or hasIpAddress('172.30.1.48')"))
                                 .anyRequest().authenticated()
                 )
                 .authenticationManager(authenticationManager)
                 .sessionManagement((session) -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        
+
         http.addFilter(getAuthenticationFilter(authenticationManager)); // 통과된 데이터에 한해서만(해당 IP만) 필터적용하겠다.
         http.headers((headers) -> headers.frameOptions((frameOptions) -> frameOptions.sameOrigin())); // 헤더의 프레임옵션을 사용하지 않겠다
 

@@ -2,7 +2,6 @@ package com.example.villion_user_service.controller;
 
 import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.CartEntity;
-import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
 import com.example.villion_user_service.domain.eunm.RentalMethod;
@@ -26,14 +25,28 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("")
 @RequiredArgsConstructor
+//@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     private final UserService userService;
     private final CartService cartService;
     private final ProductService productService;
     private final UserRepository userRepository;
 
+    @PostMapping("/signup2")
+    public ResponseEntity<ResponseLogin> createUser2(@RequestBody RequestSignup requestSignup) {
+
+        System.out.println("zzzzzz");
+//        ModelMapper mapper = new ModelMapper();
+//        UserDto userDto = mapper.map(requestSignup, UserDto.class); // RequestLogin 객체를 UserDto로 전달
+//
+//        ResponseLogin responseLogin = mapper.map(userDto, ResponseLogin.class);
+//
+//        userService.createUser(userDto);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(responseLogin);
+        return null;
+    }
 
     // 회원가입
     @PostMapping("/signup")
@@ -229,13 +242,13 @@ public class UserController {
 
 
 
+    // product-service에 openFeign으로 도서관이름 보내주기
     @GetMapping("/getGetLibraryWithProduct/{userId}")
     public String getGetLibraryWithProduct(@PathVariable Long userId) {
         Optional<UserEntity> byUserId = userService.findByUserId(userId);
         return byUserId.get().getLibraryName();
     }
 
-    // TODO 이 책과 같은 카테고리 도서 목록
 
 
     // TODO 이 책과 함께 주문된 도서
