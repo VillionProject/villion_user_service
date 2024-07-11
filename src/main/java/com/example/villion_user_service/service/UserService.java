@@ -1,8 +1,9 @@
 package com.example.villion_user_service.service;
 
 import com.example.villion_user_service.client.ProductServiceClient;
+import com.example.villion_user_service.common.RestError;
+import com.example.villion_user_service.common.RestResult;
 import com.example.villion_user_service.domain.dto.UserDto;
-import com.example.villion_user_service.domain.entity.ProductEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.entity.WishLibraryEntity;
 import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
@@ -10,7 +11,9 @@ import com.example.villion_user_service.domain.eunm.Grade;
 import com.example.villion_user_service.domain.eunm.LibraryStatus;
 import com.example.villion_user_service.domain.request.RequestAddFolder;
 import com.example.villion_user_service.domain.request.RequestAddFolderProduct;
+import com.example.villion_user_service.domain.request.RequestLogin;
 import com.example.villion_user_service.domain.request.RequestUser;
+import com.example.villion_user_service.domain.response.ResponseLogin;
 import com.example.villion_user_service.domain.response.ResponseProducts;
 import com.example.villion_user_service.kafka.GetProductsByLocationProducer;
 import com.example.villion_user_service.kafka.TopicConfig;
@@ -22,6 +25,8 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,8 +47,9 @@ public class UserService implements UserDetailsService {
     private final WishProductFolderRepository wishProductFolderRepository;
     private final GetProductsByLocationProducer getProductsByLocationProducer;
     private final ProductServiceClient productServiceClient;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserDto createUser(UserDto userDto) {
+    public ResponseEntity<RestResult<Object>> createUser(UserDto userDto) {
 // ✔ UserDto -> UserEntity 변환 작업(ModelMapper 사용)
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 매칭전략을 강력하게(딱 맞아떨어지지 않으면 지정할수 없도록) 설정
@@ -61,17 +67,67 @@ public class UserService implements UserDetailsService {
                 .phoneNumber(Long.valueOf("1234"))
                 .familyAccount("test")
                 .yearlyReadingTarget(0)
-                .base_location_id("지역 미지정")
+                .baseLocationId("지역 미지정")
 //                .interstCategory(List.of(Category.NOT_SPECIFIED))
                 .build();
 
+        if (userRepository.findByEmail(userDto.getEmail()) != null ) {
+            // 이메일이 이미 존재하는 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new RestResult<>("error", new RestError("DUPLICATE", "이미 가입된 아이디입니다.")));
+        }
+
+
+//        UserDto returnUserDto = mapper.map(userEntity, UserDto.class);
+
+
         userRepository.save(userEntity);
-
-        UserDto returnUserDto = mapper.map(userEntity, UserDto.class);
-
-        return returnUserDto;
+        return ResponseEntity.ok(new RestResult<>("success", "회원가입되었습니다."));
     }
 
+
+
+    public ResponseEntity<RestResult<Object>> login(RequestLogin requestLogin) {
+        UserEntity byEmail = userRepository.findByEmail(requestLogin.getEmail());
+
+        // user없을 경우
+        if (byEmail == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new RestResult<>("error", new RestError("NOT_FOUND", "아이디가 존재하지 않습니다.")));
+        }
+
+        // email 불일치
+        if (!requestLogin.getEmail().equals(byEmail.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new RestResult<>("error",new RestError("EMAIL_MISMATCH", "이메일을 다시 입력해주세요.")));
+        }
+
+
+        // password 불일치
+        if (!bCryptPasswordEncoder.matches(requestLogin.getPassword(), byEmail.getPassword())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new RestResult<>("error",new RestError("PASSWORD_MISMATCH", "비밀번호를 다시 입력해주세요.")));
+        }
+
+
+        ResponseLogin responseLogin = ResponseLogin.builder()
+                .email(byEmail.getEmail())
+                .libraryName(byEmail.getLibraryName())
+                .phoneNumber(byEmail.getPhoneNumber())
+                .libraryStatus(byEmail.getLibraryStatus())
+                .createdAt(byEmail.getCreatedAt())
+                .grade(byEmail.getGrade())
+                .profileImage(byEmail.getProfileImage())
+                .familyAccount(byEmail.getFamilyAccount())
+                .interestCategory(byEmail.getInterestCategory())
+                .baseLocationId(byEmail.getBaseLocationId())
+                .isLogin(true)
+                .userId(byEmail.getUserId())
+                .build();
+
+
+        return ResponseEntity.ok(new RestResult<>("success", responseLogin));
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -133,7 +189,7 @@ public class UserService implements UserDetailsService {
             userEntity.setYearlyReadingTarget(requestUser.getYearlyReadingTarget());
         }
         if (requestUser.getBase_location_id() != null) {
-            userEntity.setBase_location_id(requestUser.getBase_location_id());
+            userEntity.setBaseLocationId(requestUser.getBase_location_id());
         }
 
 
@@ -268,9 +324,10 @@ public class UserService implements UserDetailsService {
 
     public List<ResponseProducts> getProductsByLocation(Long userId) {
         UserEntity byUserId = userRepository.findByUserId(userId);
-        getProductsByLocationProducer.send(TopicConfig.getProductsByLocation, byUserId.getBase_location_id());
+        getProductsByLocationProducer.send(TopicConfig.getProductsByLocation, byUserId.getBaseLocationId());
 
         return productServiceClient.getProductsByLocation();
     }
+
 
 }

@@ -55,7 +55,9 @@ public class UserEntity {
     @CollectionTable(name = "user_interest_category", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private List<Category> interestCategory; // TODO LIST로 바꿔야함?
-    private String base_location_id;
+    private String baseLocationId;
+
+    private boolean isLogin = false;
 
 //    @OneToMany // 객체안에 리스트
 //    private List<ProductEntity> productList; // 등록한 상품 리스트

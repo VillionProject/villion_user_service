@@ -16,6 +16,7 @@ public class ProductDto {
 
 //    private Long bookId;
         private Long ownerUserId; // 책주인(대여받는 사람)
+        private String LibraryName;
 
         private String bookName;
         @Enumerated(EnumType.STRING)

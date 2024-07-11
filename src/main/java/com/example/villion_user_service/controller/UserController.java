@@ -1,5 +1,6 @@
 package com.example.villion_user_service.controller;
 
+import com.example.villion_user_service.common.RestResult;
 import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.CartEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
@@ -34,40 +35,27 @@ public class UserController {
     private final ProductService productService;
     private final UserRepository userRepository;
 
-    @PostMapping("/signup2")
-    public ResponseEntity<ResponseLogin> createUser2(@RequestBody RequestSignup requestSignup) {
-
-        System.out.println("zzzzzz");
-//        ModelMapper mapper = new ModelMapper();
-//        UserDto userDto = mapper.map(requestSignup, UserDto.class); // RequestLogin 객체를 UserDto로 전달
-//
-//        ResponseLogin responseLogin = mapper.map(userDto, ResponseLogin.class);
-//
-//        userService.createUser(userDto);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(responseLogin);
-        return null;
-    }
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<ResponseLogin> createUser(@RequestBody RequestSignup requestSignup) {
+    public ResponseEntity<RestResult<Object>> createUser(@RequestBody RequestSignup requestSignup) {
         ModelMapper mapper = new ModelMapper();
         UserDto userDto = mapper.map(requestSignup, UserDto.class); // RequestLogin 객체를 UserDto로 전달
 
-        ResponseLogin responseLogin = mapper.map(userDto, ResponseLogin.class);
+//        ResponseLogin responseLogin = mapper.map(userDto, ResponseLogin.class);
 
-        userService.createUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseLogin);
+        return  userService.createUser(userDto);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(responseLogin);
     }
 
 
 
     // 로그인
-//    @PostMapping("/login")
-//    public void login (RequestLogin requestLogin) {
-//
-//
-//    }
+    @PostMapping("/login2")
+    public ResponseEntity<RestResult<Object>> login (@RequestBody RequestLogin requestLogin) {
+
+        return userService.login(requestLogin);
+    }
 
 
 
