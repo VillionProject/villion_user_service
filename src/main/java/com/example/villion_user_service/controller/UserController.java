@@ -82,7 +82,7 @@ public class UserController {
         UserEntity userEntity = userService.updateLibrary(userId, requestUser);
 
         // TODO 이거 넣어야 하나?
-        if (userEntity != null) { // Optional 내부에 실제 객체가 있는지 확인
+        if (userEntity == null) { // Optional 내부에 실제 객체가 있는지 확인
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
@@ -94,10 +94,10 @@ public class UserController {
 
     // 찜 도서관 목록에 넣기/빼기
     // 찜하려는 도서관ID가 목록에 없으면, 추가 // 있으면, 제거
-    @PostMapping("/{userId}/wishLibrary/toggle")
-    public void toggleWishLibrary(@PathVariable Long userId, @RequestParam Long wishLibraryId) {
-        userService.toggleWishLibrary(userId, wishLibraryId);
-    }
+//    @PostMapping("/{userId}/wishLibrary/toggle")
+//    public void toggleWishLibrary(@PathVariable Long userId, @RequestParam Long wishLibraryId) {
+//        userService.toggleWishLibrary(userId, wishLibraryId);
+//    }
 
 
 
