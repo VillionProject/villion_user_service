@@ -14,6 +14,7 @@ import lombok.Data;
 public class ResponseProducts {
     private Long ownerUserId; // 책주인(대여받는 사람)
 
+    private Long productId;
     private String bookName;
     @Enumerated(EnumType.STRING)
     private Category category; // enum
