@@ -23,8 +23,8 @@ public class RequestAddProduct {
     private Category category; // enum
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus; // enum
-    @Enumerated(EnumType.STRING)
-    private RentalStatus rentalStatus; // 대여 상태
+//    @Enumerated(EnumType.STRING)
+//    private RentalStatus rentalStatus; // 대여 상태
     private Long stockQuantity;
 //    private LocalDate rentalPeriod; // 대여 가능 기간
     private Long rentalPrice;
@@ -35,5 +35,7 @@ public class RequestAddProduct {
     private String description;
     private Boolean rentable;
     private Boolean purchasable;
+
+    private String productImg;
 
 }

@@ -59,6 +59,7 @@ public class UserEntity {
 
     private boolean isLogin = false;
 
+
 //    @OneToMany // 객체안에 리스트
 //    private List<ProductEntity> productList; // 등록한 상품 리스트
 //

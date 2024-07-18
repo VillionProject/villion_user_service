@@ -7,7 +7,6 @@ import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
 import com.example.villion_user_service.domain.eunm.RentalMethod;
 import com.example.villion_user_service.domain.request.*;
-import com.example.villion_user_service.domain.response.ResponseLogin;
 import com.example.villion_user_service.domain.response.ResponseProducts;
 import com.example.villion_user_service.domain.response.ResponseUser;
 import com.example.villion_user_service.repository.UserRepository;
