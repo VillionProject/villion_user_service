@@ -238,25 +238,10 @@ public class UserController {
 
 
 
-    // TODO 이 책과 함께 주문된 도서
-
-
-
-    // TODO 이 시리즈의 다른 책
-
-
-
-    // TODO 직거래 신청(1:1 채팅으로 넘어가기)
-
-
-
-
     // 직배송 신청(일반적인 구매로직)
     @PostMapping("/addDeliveryOrder/{userId}")
     public void addDeliveryOrder(@PathVariable Long userId, @RequestBody RequestAddDeliveryOrder requestAddDeliveryOrder) {
         productService.addDeliveryOrder(userId, requestAddDeliveryOrder);
     }
-
-
 
 }
