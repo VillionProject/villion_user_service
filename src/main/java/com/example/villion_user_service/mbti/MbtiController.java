@@ -1,4 +1,4 @@
-package com.example.villion_user_service.controller;
+package com.example.villion_user_service.mbti;
 
 import com.example.villion_user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/question")
-@RequiredArgsConstructor
-public class QuestionController {
+@RequestMapping("/mbti")
+//@RequiredArgsConstructor
+public class MbtiController {
 
-    private final String[][] question = {
+    private final String[][] questions = {
         {
             "상상해보세요: 주말 오후, 햇살이 가득한 창가에서 책을 읽고 있습니다. 1. 책에 완전히 몰입해 주변 세상은 잊은 듯 집중한다. 2. 가끔씩 창밖을 보며 누군가와 이 순간을 나누고 싶다는 생각을 한다.",
             "당신은 새로운 독서 모임에 초대되었습니다. 1. 모임이 끝난 후에도 혼자 책을 되새기며 생각을 정리한다. 2. 모임에서 느꼈던 감정과 의견을 다른 사람들과 더 나누고 싶어 한다.",
@@ -34,7 +34,35 @@ public class QuestionController {
         }
     };
 
-    private final UserService userService;
+//    private final UserService userService;
+
+
+    // #1번 questions을 넣을 배열 생성
+    // TODO 왜 빈 배열에 저장하지? 이미 배열에 저장되어 있는데?
+    private MbtiComponents[] mbtiComponents;
+    public MbtiController() {
+        // #2번 class 가 생성 되면서 categories 에 카테고리와 질문 insert
+        // categories 배열길이 4로 생성(카테고리가 4개니까)
+        mbtiComponents = new MbtiComponents[4];
+        for (int i = 0; i < mbtiComponents.length; i++) {
+            // #3번 카테고리 빈 배열 4개 insert..
+            mbtiComponents[i] = new MbtiComponents();
+
+            // #4번 카테고리 마다 질문 insert..
+            for (String question : questions[i]) {
+                mbtiComponents[i].addQuestion(question);
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
 
 
     // TODO mbti 결과 보기
