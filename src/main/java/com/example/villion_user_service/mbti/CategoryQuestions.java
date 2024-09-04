@@ -3,9 +3,9 @@ package com.example.villion_user_service.mbti;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MbtiComponents {
+public class CategoryQuestions {
     private List<QuestionAnswer> questions;
-    public MbtiComponents() {
+    public CategoryQuestions() {
         this.questions = new ArrayList<>();
     }
     public void addQuestion(String question) {

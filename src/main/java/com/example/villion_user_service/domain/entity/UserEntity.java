@@ -57,7 +57,7 @@ public class UserEntity {
     private List<Category> interestCategory; // TODO LIST로 바꿔야함?
     private String baseLocationId;
 
-    private boolean isLogin = false;
+//    private boolean isLogin = false;
 
     private String mbti;
 

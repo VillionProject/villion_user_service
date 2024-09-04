@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class QuestionResponse {
-    private MbtiComponents[] mbtiComponents;
+    private CategoryQuestions[] questions;
     private String type;
 }
