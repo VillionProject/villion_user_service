@@ -8,7 +8,7 @@ spring:
     name: user-service
 
   datasource:
-    url: jdbc:mysql://34.29.109.78:3306/villion_user?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://34.135.169.122:3306/villion_user?serverTimezone=Asia/Seoul
     username: root
     password: 1234
   jpa:
@@ -20,7 +20,7 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
 
   kafka:
-    bootstrap-servers: 34.29.109.78:9092
+    bootstrap-servers: 34.135.169.122:9092
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer

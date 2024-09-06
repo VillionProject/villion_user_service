@@ -1,7 +1,7 @@
 spring:
   cloud:
     config:
-      uri: http://35.193.153.41:8888
+      uri: http://34.121.58.202:8888
       name: user-service # 파일이름이 아니라 어플리케이션 이름을 적으면 해당 application.yml을 읽어온다.
       # 어플리케이션 이름 적어줬음..파일이름을 적어라..
 #  profiles:

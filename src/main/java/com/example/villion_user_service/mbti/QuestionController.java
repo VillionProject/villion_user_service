@@ -1,5 +1,6 @@
 package com.example.villion_user_service.mbti;
 
+import com.example.villion_user_service.domain.entity.UserEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

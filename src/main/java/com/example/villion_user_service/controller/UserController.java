@@ -132,7 +132,6 @@ public class UserController {
     @PostMapping("/addCart")
     public void addCart(@RequestBody RequestCart requestCart) {
         cartService.addCart(requestCart);
-
     }
 
     // 장바구니 보여주기
@@ -201,6 +200,10 @@ public class UserController {
         return filteredCart;
     }
 
+
+
+
+
     // 장바구니 선택 비우기
     @PostMapping("/deleteCart/{userId}/{productId}")
     public void deleteCart(@PathVariable("userId") Long userId, @PathVariable("productId") Long productId) {
@@ -244,4 +247,11 @@ public class UserController {
         productService.addDeliveryOrder(userId, requestAddDeliveryOrder);
     }
 
+
+
+    // MBTI 저장
+    @PostMapping("/saveMbti/{userId}")
+    public void saveMbti(@PathVariable Long userId, String mbti) {
+        userService.saveMbti(userId, mbti);
+    }
 }

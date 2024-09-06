@@ -330,4 +330,9 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public void saveMbti(Long userId, String mbti) {
+        UserEntity byUserId = userRepository.findByUserId(userId);
+        byUserId.setMbti(mbti);
+    }
+
 }

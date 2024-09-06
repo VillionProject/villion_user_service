@@ -54,7 +54,7 @@ public class UserEntity {
     @ElementCollection(targetClass = Category.class)
     @CollectionTable(name = "user_interest_category", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    private List<Category> interestCategory; // TODO LIST로 바꿔야함?
+    private List<Category> interestCategory;
     private String baseLocationId;
 
 //    private boolean isLogin = false;
