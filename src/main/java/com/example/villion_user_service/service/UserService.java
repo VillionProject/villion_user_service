@@ -7,6 +7,7 @@ import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.entity.WishLibraryEntity;
 import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
+import com.example.villion_user_service.domain.eunm.Category;
 import com.example.villion_user_service.domain.eunm.Grade;
 import com.example.villion_user_service.domain.eunm.LibraryStatus;
 import com.example.villion_user_service.domain.request.RequestAddFolder;

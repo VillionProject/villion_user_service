@@ -14,12 +14,17 @@ public class MbtiCategoryService {
     private final MbtiCategoryRepository mbtiCategoryRepository;
     private final UserRepository userRepository;
 
-    List<Category> getMbtiCategory(Long userId) {
-        UserEntity byUserId = userRepository.findByUserId(userId);
-        String mbti = byUserId.getMbti();
-        List<Category> allByMbti = mbtiCategoryRepository.findAllByMbti(mbti);
+//    List<Category> getMbtiCategory(Long userId) {
+//        UserEntity byUserId = userRepository.findByUserId(userId);
+//        String mbti = byUserId.getMbti();
+//        List<Category> allByMbti = mbtiCategoryRepository.findAllByMbti(mbti);
+//
+//        return allByMbti;
+//    }
 
-        return allByMbti;
+
+    public List<MbtiCategoryEntity> getCategoryByMbti(String mbti) {
+    return mbtiCategoryRepository.findAllByMbti(mbti);
     }
 
 

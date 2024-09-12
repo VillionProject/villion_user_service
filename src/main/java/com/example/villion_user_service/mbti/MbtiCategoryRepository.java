@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MbtiCategoryRepository extends CrudRepository<MbtiCategoryEntity, Long> {
-    List<Category> findAllByMbti(String mbti);
+    List<MbtiCategoryEntity> findAllByMbti(String mbti);
 }

@@ -5,10 +5,12 @@ import com.example.villion_user_service.domain.dto.UserDto;
 import com.example.villion_user_service.domain.entity.CartEntity;
 import com.example.villion_user_service.domain.entity.UserEntity;
 import com.example.villion_user_service.domain.entity.WishProductFolderEntity;
+import com.example.villion_user_service.domain.eunm.Category;
 import com.example.villion_user_service.domain.eunm.RentalMethod;
 import com.example.villion_user_service.domain.request.*;
 import com.example.villion_user_service.domain.response.ResponseProducts;
 import com.example.villion_user_service.domain.response.ResponseUser;
+import com.example.villion_user_service.mbti.MbtiCategoryService;
 import com.example.villion_user_service.repository.UserRepository;
 import com.example.villion_user_service.service.CartService;
 import com.example.villion_user_service.service.ProductService;
@@ -92,8 +94,8 @@ public class UserController {
 
 
     // 프로필 사진 변경
-    @PatchMapping("/updateProfileImage/{userId}")
-    public void updateProfileImage(@PathVariable("userId") Long userId, @RequestBody String profileImage) {
+    @PatchMapping("/updateProfileImage/{userId}/{profileImage}")
+    public void updateProfileImage(@PathVariable("userId") Long userId, @PathVariable("profileImage") String profileImage) {
         userService.updateProfileImage(userId, profileImage);
     }
 
@@ -122,7 +124,7 @@ public class UserController {
     }
 
 
-    // 폴더 목록 보기
+    // 찜도서 폴더 목록 보기
     @GetMapping("/{userId}/wishProductFolder")
     public List<WishProductFolderEntity> getWishProductFolder(@PathVariable Long userId) {
         return userService.getWishProductFolder(userId);
@@ -264,10 +266,12 @@ public class UserController {
 
 
     // MBTI 저장
-    @PostMapping("/saveMbti/{userId}")
-    public void saveMbti(@PathVariable Long userId, String mbti) {
+    @PostMapping("/saveMbti/{userId}/{mbti}")
+    public void saveMbti(@PathVariable("userId") Long userId, @PathVariable("mbti") String mbti) {
         userService.saveMbti(userId, mbti);
     }
+
+
 
 
 
