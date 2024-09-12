@@ -80,7 +80,7 @@ public class UserService implements UserDetailsService {
 
 //        UserDto returnUserDto = mapper.map(userEntity, UserDto.class);
 
-
+        System.out.println(userEntity.toString());
         userRepository.save(userEntity);
         return ResponseEntity.ok(new RestResult<>("success", "회원가입되었습니다."));
     }
@@ -216,7 +216,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-
+// TODO 본인의 도서관은 찜 목록에 추가할 수 없습니다.
     public void toggleWishLibrary(Long userId, Long wishLibraryId) {
         WishLibraryEntity byUserIdAndWishLibraryId = wishLibraryRepository.findByUserIdAndWishLibraryId(userId, wishLibraryId);
 
@@ -304,7 +304,9 @@ public class UserService implements UserDetailsService {
         // 디폴트로 "기본폴더" 만들어서 보여주기
         // 기본 폴더가 있는지 확인
         WishProductFolderEntity defaultFolder = wishProductFolderRepository.findByUserIdAndFolderName(userId, "기본폴더");
-        if(!Objects.equals(defaultFolder.getFolderName(), "기본폴더")) {
+//        if(!Objects.equals(defaultFolder.getFolderName(), "기본폴더")) {
+        // 기본 폴더가 없으면 새로 생성
+        if (defaultFolder == null) {
             WishProductFolderEntity folderEntity = WishProductFolderEntity.builder()
                     .userId(userId)
                     .folderName("기본폴더")
@@ -312,12 +314,13 @@ public class UserService implements UserDetailsService {
 
             wishProductFolderRepository.save(folderEntity);
         }
-
-
         return wishProductFolderRepository.findAllByUserId(userId);
     }
 
+
+    // TODO 찜도서 목록 상세보기
     public List<WishProductFolderEntity> wishProductFolderDetail(Long userId, String folderName) {
+
         return null;
     }
 

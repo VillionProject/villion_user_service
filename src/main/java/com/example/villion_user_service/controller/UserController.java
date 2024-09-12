@@ -135,11 +135,11 @@ public class UserController {
     }
 
     // 장바구니 보여주기
-//    @GetMapping("/getCart/{userId}")
-//    public Map<Long, CartEntity> getCart(@PathVariable("userId") Long userId) {
-//        Map<Long, CartEntity> cart = cartService.getCart(userId);
-//        return cart;
-//    }
+    @GetMapping("/getCart/{userId}")
+    public Map<Long, CartEntity> getCart(@PathVariable("userId") Long userId) {
+        Map<Long, CartEntity> cart = cartService.getCart(userId);
+        return cart;
+    }
 
     // (장바구니에서) 직거래 보기 - "대여" 보여주기
     @GetMapping("/getFaceRentalCart/{userId}")
@@ -200,10 +200,6 @@ public class UserController {
         return filteredCart;
     }
 
-
-
-
-
     // 장바구니 선택 비우기
     @PostMapping("/deleteCart/{userId}/{productId}")
     public void deleteCart(@PathVariable("userId") Long userId, @PathVariable("productId") Long productId) {
@@ -254,4 +250,11 @@ public class UserController {
     public void saveMbti(@PathVariable Long userId, String mbti) {
         userService.saveMbti(userId, mbti);
     }
+
+
+
+
+    // TODO '대여중','완료' 거래 수 보여주기
+
+
 }
