@@ -338,11 +338,11 @@ public class UserService implements UserDetailsService {
         byUserId.setMbti(mbti);
     }
 
-// TODO 프로필이미지 수정
-//    public void updateProfileImage(Long userId) {
-//        UserEntity byUserId = userRepository.findByUserId(userId);
-//        byUserId.setProfileImage();
-//    }
+
+    public void updateProfileImage(Long userId, String profileImage) {
+        UserEntity byUserId = userRepository.findByUserId(userId);
+        byUserId.setProfileImage(profileImage);
+    }
 
 
 }

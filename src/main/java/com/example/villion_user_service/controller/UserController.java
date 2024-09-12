@@ -92,10 +92,10 @@ public class UserController {
 
 
     // 프로필 사진 변경
-//    @PatchMapping("/updateProfileImage/{userId}")
-//    public void updateProfileImage(@PathVariable("userId") Long userId, @RequestBody String profileImage) {
-//        userService.updateProfileImage(userId, profileImage);
-//    }
+    @PatchMapping("/updateProfileImage/{userId}")
+    public void updateProfileImage(@PathVariable("userId") Long userId, @RequestBody String profileImage) {
+        userService.updateProfileImage(userId, profileImage);
+    }
 
 
 
