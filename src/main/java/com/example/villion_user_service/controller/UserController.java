@@ -91,6 +91,14 @@ public class UserController {
     }
 
 
+    // 프로필 사진 변경
+//    @PatchMapping("/updateProfileImage/{userId}")
+//    public void updateProfileImage(@PathVariable("userId") Long userId, @RequestBody String profileImage) {
+//        userService.updateProfileImage(userId, profileImage);
+//    }
+
+
+
     // 찜 도서관 목록에 넣기/빼기
     // 찜하려는 도서관ID가 목록에 없으면, 추가 // 있으면, 제거
 //    @PostMapping("/{userId}/wishLibrary/toggle")
@@ -133,6 +141,16 @@ public class UserController {
     public void addCart(@RequestBody RequestCart requestCart) {
         cartService.addCart(requestCart);
     }
+
+
+    // 장바구니 전체 보여주기
+    @GetMapping("/getAllCart/{userId}")
+    public List<CartEntity> getAllCart(@PathVariable("userId") Long userId) {
+        List<CartEntity> cart = cartService.getAllCart(userId);
+        return cart;
+    }
+
+
 
     // 장바구니 보여주기
     @GetMapping("/getCart/{userId}")

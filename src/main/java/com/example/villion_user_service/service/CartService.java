@@ -10,9 +10,11 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,11 @@ public class CartService {
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         CartEntity cartEntity = mapper.map(requestCart, CartEntity.class);
         cartRepository.save(cartEntity);
+    }
+
+    public List<CartEntity> getAllCart(Long userId) {
+        return cartRepository.findAllByUserId(userId);
+
     }
 
     public Map<Long, CartEntity> getCart(Long userId) {
@@ -51,5 +58,6 @@ public class CartService {
     public void deleteAllCart(Long userId) {
         cartRepository.deleteAllByUserId(userId);
     }
+
 
 }
