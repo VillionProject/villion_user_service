@@ -273,6 +273,18 @@ public class UserController {
 
 
 
+    // TODO 사용자 위치 등록
+    @PostMapping("/{userId}/location")
+    public String updateUserLocation(@PathVariable Long userId, @RequestBody LocationRequest locationRequest) {
+        userService.updateUserLocation(userId, locationRequest.getLatitude(), locationRequest.getLongitude());
+        System.out.println("userId = " + userId + ", locationRequest = " + locationRequest);
+
+        return "Location updated successfully";
+    }
+
+
+
+    // TODO 사용자 위치 수정
 
 
 
