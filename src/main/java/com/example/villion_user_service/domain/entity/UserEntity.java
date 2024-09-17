@@ -55,7 +55,9 @@ public class UserEntity {
     @CollectionTable(name = "user_interest_category", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private List<Category> interestCategory;
+
     private String baseLocationId;
+    private String baseLocation;
 
     private boolean isLogin = false;
 //

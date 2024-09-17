@@ -18,6 +18,7 @@ import com.example.villion_user_service.domain.response.ResponseLogin;
 import com.example.villion_user_service.domain.response.ResponseProducts;
 import com.example.villion_user_service.kafka.GetProductsByLocationProducer;
 import com.example.villion_user_service.kafka.TopicConfig;
+import com.example.villion_user_service.location.GeocodingService;
 import com.example.villion_user_service.repository.UserRepository;
 import com.example.villion_user_service.repository.WishLibraryRepository;
 import com.example.villion_user_service.repository.WishProductFolderRepository;
@@ -49,6 +50,7 @@ public class UserService implements UserDetailsService {
     private final GetProductsByLocationProducer getProductsByLocationProducer;
     private final ProductServiceClient productServiceClient;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final GeocodingService geocodingService;
 
     public ResponseEntity<RestResult<Object>> createUser(UserDto userDto) {
 // ✔ UserDto -> UserEntity 변환 작업(ModelMapper 사용)
@@ -344,6 +346,33 @@ public class UserService implements UserDetailsService {
         UserEntity byUserId = userRepository.findByUserId(userId);
         byUserId.setProfileImage(profileImage);
     }
+
+
+    public void updateUserLocation(Long userId, double latitude, double longitude) {
+        // 위도, 경도를 주소로 변환
+        String address = geocodingService.getAddressFromCoordinates(latitude, longitude);
+        System.out.println(address);
+
+        // 사용자 정보 업데이트
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setBaseLocation(address);
+
+        // DB에 저장
+        userRepository.save(user);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

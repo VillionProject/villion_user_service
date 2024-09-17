@@ -79,3 +79,8 @@ eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
+
+# Google API 키 설정
+google:
+  api:
+    key: YOUR_GOOGLE_API_KEY_HERE
