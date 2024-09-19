@@ -1,6 +1,5 @@
 package com.example.villion_user_service.location;
 
-import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,42 +14,84 @@ public class GeocodingService {
     private Environment env;
 
     public String getAddressFromCoordinates(double latitude, double longitude) {
-        String googleApiKey = env.getProperty("google.api.key"); // 프로퍼티 값 읽기
-
-        System.out.println(googleApiKey);
-
+        String googleApiKey = env.getProperty("google.api.key");
         String url = String.format(
-                "https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s",
+                "https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&key=%s&language=ko",
                 latitude, longitude, googleApiKey
         );
 
         RestTemplate restTemplate = new RestTemplate();
-        String status = "UNKNOWN";
 
         try {
             String response = restTemplate.getForObject(url, String.class);
 
             if (response != null) {
                 JSONObject jsonObject = new JSONObject(response);
-                status = jsonObject.optString("status", "ZERO_RESULTS");
+                String status = jsonObject.optString("status", "ZERO_RESULTS");
 
                 if ("OK".equals(status)) {
                     JSONArray resultsArray = jsonObject.optJSONArray("results");
                     if (resultsArray != null && resultsArray.length() > 0) {
-                        JSONObject firstResult = resultsArray.optJSONObject(0);
-                        return firstResult.optString("formatted_address", "Address not found");
+                        JSONObject firstResult = resultsArray.getJSONObject(0);
+                        JSONArray addressComponents = firstResult.getJSONArray("address_components");
+
+                        String dong = null;
+                        String gu = null;
+                        String city = null;
+
+                        // 각 address_component의 types 분석
+                        for (int i = 0; i < addressComponents.length(); i++) {
+                            JSONObject component = addressComponents.getJSONObject(i);
+                            JSONArray types = component.getJSONArray("types");
+
+                            // 구(political, sublocality_level_1) 정보 추출
+                            if (types.toString().contains("sublocality_level_1")) {
+                                gu = component.getString("long_name");
+                            }
+
+                            // 동(sublocality_level_2) 정보 추출
+                            if (types.toString().contains("sublocality_level_2")) {
+                                dong = component.getString("long_name");
+                            }
+
+                            // 동(sublocality_level_1) 정보 추출
+                            if (types.toString().contains("sublocality_level_1")) {
+                                // sublocality_level_1이 동 정보인 경우
+                                if (dong == null) { // 동 정보가 없는 경우에만 저장
+                                    dong = component.getString("long_name");
+                                }
+                            }
+
+                            // 시(locality) 정보 추출
+                            if (types.toString().contains("locality")) {
+                                city = component.getString("long_name");
+                            }
+                        }
+
+                        // 시, 구, 동 정보를 출력
+                        if (city != null) {
+                            System.out.println("시 정보: " + city); // 예: 수원시
+                        }
+                        if (gu != null) {
+                            System.out.println("구 정보: " + gu); // 예: 팔달구
+                        }
+                        if (dong != null) {
+                            System.out.println("동 정보: " + dong); // 예: 인계동
+
+                        } else {
+                            return "동 정보를 찾을 수 없습니다"; // 동 정보를 찾지 못한 경우
+                        }
+                        return city+ " " + dong; // 동 정보가 있으면 반환
                     }
                 } else {
-                    // API 상태 코드가 OK가 아닐 때
-                    System.err.println("Geocoding API returned status: " + status);
+                    System.out.println("Geocoding API returned status: " + status);
                 }
             }
         } catch (Exception e) {
-            // 예외 발생 시
-            System.err.println("Error occurred while calling Geocoding API: " + e.getMessage());
+            System.out.println("Error occurred while calling Geocoding API: " + e.getMessage());
             e.printStackTrace();
         }
 
-        return "Unable to determine address"; // 위치 정보를 찾을 수 없는 경우
+        return "동 정보를 찾을 수 없습니다"; // 예외 상황에서 동 정보를 찾을 수 없는 경우
     }
 }
