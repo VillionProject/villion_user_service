@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-//@Autowired
-//private Environment env;
-
 
 @Service
 public class GeocodingService {
@@ -42,20 +39,25 @@ public class GeocodingService {
                         String gu = null;
                         String city = null;
 
+                        System.out.println(addressComponents.toString());
+
                         // 각 address_component의 types 분석
                         for (int i = 0; i < addressComponents.length(); i++) {
                             JSONObject component = addressComponents.getJSONObject(i);
                             JSONArray types = component.getJSONArray("types");
 
-                            // 구(administrative_area_level_2) 정보 추출
-                            if (types.toString().contains("administrative_area_level_2")) {
+                            // 구(political, sublocality_level_1) 정보 추출
+                            if (types.toString().contains("sublocality_level_1")) {
                                 gu = component.getString("long_name");
                             }
 
-                            // 동(sublocality_level_2 또는 sublocality_level_1) 정보 추출
+                            // 동(sublocality_level_2) 정보 추출
                             if (types.toString().contains("sublocality_level_2")) {
                                 dong = component.getString("long_name");
-                            } else if (types.toString().contains("sublocality_level_1")) {
+                            }
+
+                            // 동(sublocality_level_1) 정보 추출
+                            if (types.toString().contains("sublocality_level_1")) {
                                 // sublocality_level_1이 동 정보인 경우
                                 if (dong == null) { // 동 정보가 없는 경우에만 저장
                                     dong = component.getString("long_name");
@@ -65,6 +67,7 @@ public class GeocodingService {
                             // 시(locality) 정보 추출
                             if (types.toString().contains("locality")) {
                                 city = component.getString("long_name");
+                                System.out.println("시(locality) 정보: " + city);
                             }
                         }
 
@@ -77,9 +80,17 @@ public class GeocodingService {
                         }
                         if (dong != null) {
                             System.out.println("동 정보: " + dong); // 예: 인계동
-                            return dong; // 동 정보가 있으면 반환
+                        }
+
+                        // 동 정보가 있으면 시와 동 정보를 반환, 동이 없으면 시 정보만 반환
+                        if (city != null) {
+                            if (dong != null) {
+                                return city + " " + dong;
+                            } else {
+                                return city; // 동 정보가 없으면 시 정보만 반환
+                            }
                         } else {
-                            return "동 정보를 찾을 수 없습니다"; // 동 정보를 찾지 못한 경우
+                            return "지역 미지정"; // 시 정보도 없을 때
                         }
                     }
                 } else {
@@ -90,7 +101,6 @@ public class GeocodingService {
             System.out.println("Error occurred while calling Geocoding API: " + e.getMessage());
             e.printStackTrace();
         }
-
-        return "동 정보를 찾을 수 없습니다"; // 예외 상황에서 동 정보를 찾을 수 없는 경우
+        return "지역 미지정"; // 예외 상황에서 동 정보를 찾을 수 없는 경우
     }
 }

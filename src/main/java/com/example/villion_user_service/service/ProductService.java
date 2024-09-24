@@ -28,8 +28,8 @@ public class ProductService {
 //        productRepository.save(productEntity);
     }
 
-    public void addDeliveryOrder(Long userId, RequestAddDeliveryOrder requestAddDeliveryOrder) {
-        requestAddDeliveryOrder.setRenterUserId(userId);
+    public void addDeliveryOrder(Long renterUserId, RequestAddDeliveryOrder requestAddDeliveryOrder) {
+        requestAddDeliveryOrder.setRenterUserId(renterUserId);
         orderKafkaProducer.send(TopicConfig.addDeliveryOrder, requestAddDeliveryOrder);
 //        orderKafkaProducer.send(TopicConfig.addRentedDeliveryOrderLast1, requestAddDeliveryOrder);
 

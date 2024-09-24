@@ -355,7 +355,7 @@ public class UserService implements UserDetailsService {
 
         // 사용자 정보 업데이트
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        user.setBaseLocation(address);
+        user.setBaseLocationId(address);
 
         // DB에 저장
         userRepository.save(user);

@@ -57,9 +57,8 @@ public class UserEntity {
     private List<Category> interestCategory;
 
     private String baseLocationId;
-    private String baseLocation;
 
-    private boolean isLogin = false;
+//    private boolean isLogin = false;
 //
     private String mbti;
 

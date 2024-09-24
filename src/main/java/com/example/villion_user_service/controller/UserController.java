@@ -258,9 +258,9 @@ public class UserController {
 
 
     // 직배송 신청(일반적인 구매로직)
-    @PostMapping("/addDeliveryOrder/{userId}")
-    public void addDeliveryOrder(@PathVariable Long userId, @RequestBody RequestAddDeliveryOrder requestAddDeliveryOrder) {
-        productService.addDeliveryOrder(userId, requestAddDeliveryOrder);
+    @PostMapping("/addDeliveryOrder/{renterUserId}")
+    public void addDeliveryOrder(@PathVariable("renterUserId") Long renterUserId, @RequestBody RequestAddDeliveryOrder requestAddDeliveryOrder) {
+        productService.addDeliveryOrder(renterUserId, requestAddDeliveryOrder);
     }
 
 
@@ -283,12 +283,6 @@ public class UserController {
     }
 
 
-
-    // TODO 사용자 위치 수정
-
-
-
-    // TODO '대여중','완료' 거래 수 보여주기
 
 
 }
